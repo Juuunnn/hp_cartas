@@ -13,7 +13,7 @@ class HPCharacter {
   final Barita? wand;
   final bool hogwartsStudent;
   final bool hogwartsStaff;
-  final Uri? image;
+  final String? image;
 
   HPCharacter._(
       {required this.name,
@@ -59,7 +59,7 @@ class HPCharacter {
       wand: wandProp,
       hogwartsStudent: hogwartsStudentProp,
       hogwartsStaff: hogwartsStaffProp,
-      image: imageUrl != null ? Uri.parse(imageUrl) : null,
+      image: imageUrl,
     );
   }
 }
