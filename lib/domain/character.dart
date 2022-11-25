@@ -41,15 +41,13 @@ class HPCharacter {
     required bool hogwartsStaffProp,
     String? imageUrl,
   }) {
-    if (nameProp.trim().isEmpty) {
-      throw InvalidName();
+    if (nameProp.trim().isEmpty) throw InvalidName();
+    if (speciesProp.trim().isEmpty) throw InvalidSpecies();
+    if (genderProp.trim().isEmpty) throw InvalidGender();
+    if (imageUrl != null) {
+      if (!Uri.parse(imageUrl).isAbsolute) throw InvalidImageUrl();
     }
-    if (speciesProp.trim().isEmpty) {
-      throw InvalidSpecies();
-    }
-    if (genderProp.trim().isEmpty) {
-      throw InvalidGender();
-    }
+
     return HPCharacter._(
       nameProp,
       speciesProp,

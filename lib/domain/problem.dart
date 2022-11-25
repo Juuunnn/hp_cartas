@@ -7,3 +7,5 @@ class InvalidName extends ProblemCharacter {}
 class InvalidGender extends ProblemCharacter {}
 
 class InvalidSpecies extends ProblemCharacter {}
+
+class InvalidImageUrl extends ProblemCharacter {}
