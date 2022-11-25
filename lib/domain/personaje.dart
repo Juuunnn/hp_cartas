@@ -3,11 +3,11 @@ import 'dart:io';
 class PersonajeHP {
   final String name;
   final String species;
-  final String? house;
+  final String house;
   final String gender;
-  final String? dateOfBirth;
-  final String? ancestry;
-  final String? patronus;
+  final String dateOfBirth;
+  final String ancestry;
+  final String patronus;
   final Barita? wand;
   final bool hogwartsStudent;
   final bool hogwartsStaff;
@@ -29,30 +29,29 @@ class PersonajeHP {
   factory PersonajeHP.constructor({
     required String nombre,
     required String especie,
-    required String casa,
     required String genero,
-    required String fechaNacimiento,
-    required String ancestry,
-    required String patronus,
-    required Barita barita,
+    String? casa,
+    String? fechaNacimiento,
+    String? ancestry,
+    String? patronus,
+    Barita? barita,
     required bool estudiante,
     required bool profesor,
-    required String direccionImagen,
+    String? direccionImagen,
   }) {
-    throw UnimplementedError();
-    // return PersonajeHP._(
-    //   nombre,
-    //   especie,
-    //   casa,
-    //   genero,
-    //   fechaNacimiento,
-    //   ancestry,
-    //   patronus,
-    //   barita,
-    //   estudiante,
-    //   profesor,
-    //   direccionImagen,
-    // );
+    return PersonajeHP._(
+      nombre,
+      especie,
+      casa ?? 'n/a',
+      genero,
+      fechaNacimiento ?? 'n/a',
+      ancestry ?? 'n/a',
+      patronus ?? 'n/a',
+      barita,
+      estudiante,
+      profesor,
+      direccionImagen != null ? Uri.parse(direccionImagen) : null,
+    );
   }
 }
 
