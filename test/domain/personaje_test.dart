@@ -1,68 +1,68 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hp_cartas/domain/personaje.dart';
+import 'package:hp_cartas/domain/character.dart';
 
 import 'package:hp_cartas/domain/problem.dart';
 
 void main() {
   group('constructor personaje debe ', () {
     test('construir con todos los elementos completos', () {
-      final resultado = PersonajeHP.constructor(
-        nombre: 'Harry Potter',
-        especie: 'human',
-        casa: 'Gryffindor',
-        genero: 'male',
-        fechaNacimiento: '31-07-1980',
-        ancestry: 'half-blood',
-        patronus: 'stag',
-        barita: Barita(wood: "holly", core: "phoenix feather", length: 11),
-        estudiante: true,
-        profesor: false,
-        direccionImagen: 'https://hp-api.herokuapp.com/images/harry.jpg',
+      final resultado = HPCharacter.constructor(
+        nameProp: 'Harry Potter',
+        speciesProp: 'human',
+        houseProp: 'Gryffindor',
+        genderProp: 'male',
+        dateOfBirthProp: '31-07-1980',
+        ancestryProp: 'half-blood',
+        patronusProp: 'stag',
+        wandProp: Barita(wood: "holly", core: "phoenix feather", length: 11),
+        hogwartsStudentProp: true,
+        hogwartsStaffProp: false,
+        imageUrl: 'https://hp-api.herokuapp.com/images/harry.jpg',
       );
-      expect(resultado, isA<PersonajeHP>());
+      expect(resultado, isA<HPCharacter>());
     });
     test('construir con los minimos elementos', () {
-      final resultado = PersonajeHP.constructor(
-        nombre: 'Harry Potter',
-        especie: 'human',
-        genero: 'male',
-        estudiante: true,
-        profesor: false,
+      final resultado = HPCharacter.constructor(
+        nameProp: 'Harry Potter',
+        speciesProp: 'human',
+        genderProp: 'male',
+        hogwartsStudentProp: true,
+        hogwartsStaffProp: false,
       );
-      expect(resultado, isA<PersonajeHP>());
+      expect(resultado, isA<HPCharacter>());
     });
     test('tener nombre con caracteres', () {
       expect(
-          () => PersonajeHP.constructor(
-                nombre: ' ',
-                especie: 'human',
-                genero: 'male',
-                estudiante: true,
-                profesor: false,
+          () => HPCharacter.constructor(
+                nameProp: ' ',
+                speciesProp: 'human',
+                genderProp: 'male',
+                hogwartsStudentProp: true,
+                hogwartsStaffProp: false,
               ),
-          throwsA(isA<NombreInvalido>()));
+          throwsA(isA<InvalidName>()));
     });
     test('tener especie con caracteres', () {
       expect(
-          () => PersonajeHP.constructor(
-                nombre: 'sdfas ',
-                especie: '',
-                genero: 'male',
-                estudiante: true,
-                profesor: false,
+          () => HPCharacter.constructor(
+                nameProp: 'sdfas ',
+                speciesProp: '',
+                genderProp: 'male',
+                hogwartsStudentProp: true,
+                hogwartsStaffProp: false,
               ),
-          throwsA(isA<EspecieInvalido>()));
+          throwsA(isA<InvalidSpecies>()));
     });
     test('tener genero con caracteres', () {
       expect(
-          () => PersonajeHP.constructor(
-                nombre: ' dfsdf',
-                especie: 'human',
-                genero: '   ',
-                estudiante: true,
-                profesor: false,
+          () => HPCharacter.constructor(
+                nameProp: ' dfsdf',
+                speciesProp: 'human',
+                genderProp: '   ',
+                hogwartsStudentProp: true,
+                hogwartsStaffProp: false,
               ),
-          throwsA(isA<GeneroInvalido>()));
+          throwsA(isA<InvalidGender>()));
     });
   });
 }
