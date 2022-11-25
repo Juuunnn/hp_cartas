@@ -8,7 +8,7 @@ import 'package:hp_cartas/domain/problem.dart';
 abstract class CharacterCardRepo {
   Either<Problem, HPCharacter> getCharacterData(
       {required String characterName});
-  Either<Problem, HPCharacter> getCharacterList(
+  Either<Problem, List<String>> getCharacterNameList(
       {required String characterName});
 }
 
@@ -21,10 +21,10 @@ class CharacterCardRepoTest extends CharacterCardRepo {
   }
 
   @override
-  Either<Problem, HPCharacter> getCharacterList(
+  Either<Problem, List<String>> getCharacterNameList(
       {required String characterName}) {
-    // TODO: implement getCharacterList
-    throw UnimplementedError();
+    final elJson = File('test/characters.json').readAsStringSync();
+    return getListData(elJson);
   }
 }
 
@@ -37,6 +37,17 @@ Either<Problem, HPCharacter> getDataFromList(
     );
 
     return right(HPCharacter.fromMap(resultado));
+  } catch (e) {
+    return left(UnknownProblem(e.toString()));
+  }
+}
+
+Either<Problem, List<String>> getListData(String ejJson) {
+  try {
+    List<dynamic> listaCharacters = jsonDecode(ejJson);
+    final resultado = listaCharacters.map((e) => e["name"].toString()).toList();
+
+    return right(resultado);
   } catch (e) {
     return left(UnknownProblem(e.toString()));
   }
