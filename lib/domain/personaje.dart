@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:hp_cartas/domain/problem.dart';
+
 class PersonajeHP {
   final String name;
   final String species;
@@ -39,6 +41,15 @@ class PersonajeHP {
     required bool profesor,
     String? direccionImagen,
   }) {
+    if (nombre.trim().isEmpty) {
+      throw NombreInvalido();
+    }
+    if (especie.trim().isEmpty) {
+      throw EspecieInvalido();
+    }
+    if (genero.trim().isEmpty) {
+      throw GeneroInvalido();
+    }
     return PersonajeHP._(
       nombre,
       especie,

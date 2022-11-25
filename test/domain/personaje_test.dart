@@ -1,9 +1,7 @@
-import 'dart:math';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hp_cartas/domain/personaje.dart';
 
-import '../../lib/domain/problem.dart';
+import 'package:hp_cartas/domain/problem.dart';
 
 void main() {
   group('constructor personaje debe ', () {
@@ -33,16 +31,38 @@ void main() {
       );
       expect(resultado, isA<PersonajeHP>());
     });
-    test('tener nombre balido', () {
-      expect(() {
-        final resultado = PersonajeHP.constructor(
-          nombre: ' ',
-          especie: 'human',
-          genero: 'male',
-          estudiante: true,
-          profesor: false,
-        );
-      }, throwsA(isA<NombreInbalido>()));
+    test('tener nombre con caracteres', () {
+      expect(
+          () => PersonajeHP.constructor(
+                nombre: ' ',
+                especie: 'human',
+                genero: 'male',
+                estudiante: true,
+                profesor: false,
+              ),
+          throwsA(isA<NombreInvalido>()));
+    });
+    test('tener especie con caracteres', () {
+      expect(
+          () => PersonajeHP.constructor(
+                nombre: 'sdfas ',
+                especie: '',
+                genero: 'male',
+                estudiante: true,
+                profesor: false,
+              ),
+          throwsA(isA<EspecieInvalido>()));
+    });
+    test('tener genero con caracteres', () {
+      expect(
+          () => PersonajeHP.constructor(
+                nombre: ' dfsdf',
+                especie: 'human',
+                genero: '   ',
+                estudiante: true,
+                profesor: false,
+              ),
+          throwsA(isA<GeneroInvalido>()));
     });
   });
 }

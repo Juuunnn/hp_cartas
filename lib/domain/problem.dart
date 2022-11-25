@@ -2,4 +2,8 @@ abstract class Problem {}
 
 abstract class ProblemPersonaje extends Problem {}
 
-class NombreInbalido extends ProblemPersonaje {}
+class NombreInvalido extends ProblemPersonaje {}
+
+class GeneroInvalido extends ProblemPersonaje {}
+
+class EspecieInvalido extends ProblemPersonaje {}
