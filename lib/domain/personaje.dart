@@ -8,7 +8,7 @@ class PersonajeHP {
   final String? dateOfBirth;
   final String? ancestry;
   final String? patronus;
-  final Map<String, Object>? wand;
+  final Barita? wand;
   final bool hogwartsStudent;
   final bool hogwartsStaff;
   final Uri? image;
@@ -34,9 +34,9 @@ class PersonajeHP {
     required String fechaNacimiento,
     required String ancestry,
     required String patronus,
-    required Map<String, Object> barita,
-    required String estudiante,
-    required String profesor,
+    required Barita barita,
+    required bool estudiante,
+    required bool profesor,
     required String direccionImagen,
   }) {
     throw UnimplementedError();
@@ -54,4 +54,12 @@ class PersonajeHP {
     //   direccionImagen,
     // );
   }
+}
+
+class Barita {
+  final String wood;
+  final String core;
+  final int length;
+
+  Barita({required this.wood, required this.core, required this.length});
 }

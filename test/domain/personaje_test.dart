@@ -12,9 +12,9 @@ void main() {
         fechaNacimiento: '31-07-1980',
         ancestry: 'half-blood',
         patronus: 'stag',
-        barita: {"wood": "holly", "core": "phoenix feather", "length": 11},
-        estudiante: 'true',
-        profesor: 'false',
+        barita: Barita(wood: "holly", core: "phoenix feather", length: 11),
+        estudiante: true,
+        profesor: false,
         direccionImagen: 'https://hp-api.herokuapp.com/images/harry.jpg',
       );
       expect(resultado, isA<PersonajeHP>());
