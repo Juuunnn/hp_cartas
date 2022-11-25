@@ -19,5 +19,15 @@ void main() {
       );
       expect(resultado, isA<PersonajeHP>());
     });
+    test('construir con los minimos elementos', () {
+      final resultado = PersonajeHP.constructor(
+        nombre: 'Harry Potter',
+        especie: 'human',
+        genero: 'male',
+        estudiante: true,
+        profesor: false,
+      );
+      expect(resultado, isA<PersonajeHP>());
+    });
   });
 }
