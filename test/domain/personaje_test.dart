@@ -1,5 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hp_cartas/domain/personaje.dart';
+
+import '../../lib/domain/problem.dart';
 
 void main() {
   group('constructor personaje debe ', () {
@@ -28,6 +32,17 @@ void main() {
         profesor: false,
       );
       expect(resultado, isA<PersonajeHP>());
+    });
+    test('tener nombre balido', () {
+      expect(() {
+        final resultado = PersonajeHP.constructor(
+          nombre: ' ',
+          especie: 'human',
+          genero: 'male',
+          estudiante: true,
+          profesor: false,
+        );
+      }, throwsA(isA<NombreInbalido>()));
     });
   });
 }
