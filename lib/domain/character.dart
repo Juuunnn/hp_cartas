@@ -16,17 +16,17 @@ class HPCharacter {
   final Uri? image;
 
   HPCharacter._(
-      this.name,
-      this.species,
-      this.house,
-      this.gender,
-      this.dateOfBirth,
-      this.ancestry,
-      this.patronus,
+      {required this.name,
+      required this.species,
+      required this.house,
+      required this.gender,
+      required this.dateOfBirth,
+      required this.ancestry,
+      required this.patronus,
       this.wand,
-      this.hogwartsStudent,
-      this.hogwartsStaff,
-      this.image);
+      required this.hogwartsStudent,
+      required this.hogwartsStaff,
+      this.image});
 
   factory HPCharacter.constructor({
     required String nameProp,
@@ -49,17 +49,17 @@ class HPCharacter {
     }
 
     return HPCharacter._(
-      nameProp,
-      speciesProp,
-      houseProp ?? 'n/a',
-      genderProp,
-      dateOfBirthProp ?? 'n/a',
-      ancestryProp ?? 'n/a',
-      patronusProp ?? 'n/a',
-      wandProp,
-      hogwartsStudentProp,
-      hogwartsStaffProp,
-      imageUrl != null ? Uri.parse(imageUrl) : null,
+      name: nameProp,
+      species: speciesProp,
+      house: houseProp ?? 'n/a',
+      gender: genderProp,
+      dateOfBirth: dateOfBirthProp ?? 'n/a',
+      ancestry: ancestryProp ?? 'n/a',
+      patronus: patronusProp ?? 'n/a',
+      wand: wandProp,
+      hogwartsStudent: hogwartsStudentProp,
+      hogwartsStaff: hogwartsStaffProp,
+      image: imageUrl != null ? Uri.parse(imageUrl) : null,
     );
   }
 }
