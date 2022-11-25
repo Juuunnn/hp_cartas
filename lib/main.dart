@@ -1,6 +1,8 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:hp_cartas/feature/characterCard/character_card_repo.dart';
+import 'package:hp_cartas/feature/characterCard/view/character_card_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -32,13 +34,18 @@ class Pantalla extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    CharacterCardRepo repo = CharacterCardRepoTest();
+    final resultado = repo.getCharacterData(characterName: 'Harry Potter');
+
     return Center(
-      child: Column(
+        child: resultado.match(
+      (l) => const Text('personaje no encontrado'),
+      (r) => Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          Text("You have pushed the button this many times"),
+        children: [
+          CharacterCardView(character: r),
         ],
       ),
-    );
+    ));
   }
 }
