@@ -9,22 +9,26 @@ void main() {
     test('poder obtener los datos', () {
       final repo = CharacterCardRepoTest();
       final resultado = repo.getCharacterData();
-      expect(
-          resultado,
-          HPCharacter.constructor(
-            nameProp: 'Harry Potter',
-            speciesProp: 'human',
-            houseProp: 'Gryffindor',
-            genderProp: 'male',
-            dateOfBirthProp: '31-07-1980',
-            ancestryProp: 'half-blood',
-            patronusProp: 'stag',
-            wandProp:
-                Barita(wood: "holly", core: "phoenix feather", length: 11),
-            hogwartsStudentProp: true,
-            hogwartsStaffProp: false,
-            imageUrl: 'https://hp-api.herokuapp.com/images/harry.jpg',
-          ));
+      resultado.match((l) {
+        assert(false);
+      }, (r) {
+        expect(
+            r,
+            HPCharacter.constructor(
+              nameProp: 'Harry Potter',
+              speciesProp: 'human',
+              houseProp: 'Gryffindor',
+              genderProp: 'male',
+              dateOfBirthProp: '31-07-1980',
+              ancestryProp: 'half-blood',
+              patronusProp: 'stag',
+              wandProp:
+                  Barita(wood: "holly", core: "phoenix feather", length: 11),
+              hogwartsStudentProp: true,
+              hogwartsStaffProp: false,
+              imageUrl: 'https://hp-api.herokuapp.com/images/harry.jpg',
+            ));
+      });
     });
   });
 }

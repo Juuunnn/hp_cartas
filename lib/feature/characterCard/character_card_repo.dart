@@ -1,12 +1,14 @@
+import 'package:fpdart/fpdart.dart';
 import 'package:hp_cartas/domain/character.dart';
+import 'package:hp_cartas/domain/problem.dart';
 
 abstract class CharacterCardRepo {
-  HPCharacter getCharacterData();
+  Either<Problem, HPCharacter> getCharacterData();
 }
 
 class CharacterCardRepoTest extends CharacterCardRepo {
   @override
-  HPCharacter getCharacterData() {
+  Either<Problem, HPCharacter> getCharacterData() {
     // TODO: implement getCharacterData
     throw UnimplementedError();
   }
