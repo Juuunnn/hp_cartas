@@ -6,6 +6,10 @@ import 'package:hp_cartas/domain/character.dart';
 import 'package:hp_cartas/domain/problem.dart';
 
 abstract class CharacterCardRepo {
+  final List<HPCharacter> characterList;
+
+  CharacterCardRepo(this.characterList);
+
   Either<Problem, HPCharacter> getCharacterData(
       {required String characterName});
 }
