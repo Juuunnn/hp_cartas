@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hp_cartas/bloc/hp_card_bloc.dart';
 import 'package:hp_cartas/feature/characterCard/character_card_repo.dart';
 import 'package:hp_cartas/feature/characterCard/view/character_card_view.dart';
+import 'package:hp_cartas/genericView/bad_state_view.dart';
 import 'package:hp_cartas/genericView/loading.dart';
 
 void main() {
@@ -52,7 +53,7 @@ class Pantalla extends StatelessWidget {
           return CharacterCardView(character: state.character);
         }
         if (state is ErrorInesperado) {}
-        return const Text('esperando');
+        return const BadStateView();
       },
     );
   }
