@@ -11,13 +11,14 @@ class CharacterCardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Map<String, dynamic> characterMap = jsonDecode(character.toJson());
-    characterMap.removeWhere((key, value) => [
+    //[ ]: ahora puedo agregar campos a character y siempre y cuando sean de tipo
+    // string estos se agregaran como su propio espacio en la tarjeta
+    characterMap.removeWhere((key, value) =>
+        [
           'name',
-          'wand',
-          'hogwartsStaff',
-          'hogwartsStudent',
-          'image'
-        ].contains(key));
+          'image',
+        ].contains(key) ||
+        value is! String);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
