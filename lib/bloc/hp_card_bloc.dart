@@ -16,11 +16,7 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
       result.match((l) {
         emit(ErrorInesperado(l.toString()));
       }, ((r) {
-        try {
-          emit(ShowingCharacterCard(r));
-        } catch (e) {
-          emit(ErrorInesperado(e.toString()));
-        }
+        emit(ShowingCharacterCard(r));
       }));
     });
     on<NavegatedToCharacterList>((event, emit) {

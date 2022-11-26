@@ -1,6 +1,8 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hp_cartas/bloc/hp_card_bloc.dart';
 import 'package:hp_cartas/feature/characterCard/character_card_repo.dart';
 import 'package:hp_cartas/feature/characterCard/view/character_card_view.dart';
 
@@ -17,11 +19,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Flutter Demo Home Page'),
+      home: BlocProvider(
+        create: (context) => HpCardBloc(),
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text('Flutter Demo Home Page'),
+          ),
+          body: const Pantalla(),
         ),
-        body: const Pantalla(),
       ),
     );
   }
@@ -40,12 +45,7 @@ class Pantalla extends StatelessWidget {
     return Center(
         child: resultado.match(
       (l) => const Text('personaje no encontrado'),
-      (r) => Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CharacterCardView(character: r),
-        ],
-      ),
+      (r) => CharacterCardView(character: r),
     ));
   }
 }
