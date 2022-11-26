@@ -46,7 +46,7 @@ class CharacterEntry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: onClick(characterName),
+      onPressed: () => onClick(characterName),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Center(
