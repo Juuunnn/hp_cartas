@@ -186,7 +186,7 @@ class HPCharacter {
 class Barita {
   final String wood;
   final String core;
-  final int length;
+  final int? length;
 
   Barita({
     required this.wood,
@@ -218,7 +218,7 @@ class Barita {
     return Barita(
       wood: map['wood'] as String,
       core: map['core'] as String,
-      length: map['length'] as int,
+      length: map['length'] != null ? map['length'] as int : null,
     );
   }
 

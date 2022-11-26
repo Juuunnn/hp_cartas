@@ -4,7 +4,7 @@ import 'package:hp_cartas/feature/characterCard/character_card_repo.dart';
 
 void main() {
   group('character card repo deve', () {
-    test('poder obtener los datos', () {
+    test('poder obtener los datos de Harry Potter', () {
       final repo = CharacterCardRepoTest();
       final resultado = repo.getCharacterData(characterName: 'Harry Potter');
       resultado.match((l) {
@@ -31,7 +31,7 @@ void main() {
     //herminony tira error
     //Minerva McGonagall
     // cho chang
-    test('poder obtener los datos', () {
+    test('poder obtener los datos de Hermione Granger', () {
       final repo = CharacterCardRepoTest();
       final resultado =
           repo.getCharacterData(characterName: 'Hermione Granger');
@@ -41,18 +41,18 @@ void main() {
         expect(
             r,
             HPCharacter.constructor(
-              nameProp: 'Harry Potter',
+              nameProp: 'Hermione Granger',
               speciesProp: 'human',
               houseProp: 'Gryffindor',
-              genderProp: 'male',
-              dateOfBirthProp: '31-07-1980',
-              ancestryProp: 'half-blood',
-              patronusProp: 'stag',
-              wandProp:
-                  Barita(wood: "holly", core: "phoenix feather", length: 11),
+              genderProp: 'female',
+              dateOfBirthProp: '19-09-1979',
+              ancestryProp: 'muggleborn',
+              patronusProp: 'otter',
+              wandProp: Barita(
+                  wood: "vine", core: "dragon heartstring", length: null),
               hogwartsStudentProp: true,
               hogwartsStaffProp: false,
-              imageUrl: 'https://hp-api.herokuapp.com/images/harry.jpg',
+              imageUrl: 'https://hp-api.herokuapp.com/images/hermione.jpeg',
             ));
       });
     });
