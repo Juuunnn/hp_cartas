@@ -14,14 +14,14 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: BlocProvider(
-        create: (context) => HpCardBloc(),
-        child: Scaffold(
+    return BlocProvider(
+      create: (context) => HpCardBloc(),
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: Scaffold(
           appBar: AppBar(
             title: const Text('Flutter Demo Home Page'),
           ),
@@ -39,13 +39,19 @@ class Pantalla extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CharacterCardRepo repo = CharacterCardRepoTest();
-    final resultado = repo.getCharacterData(characterName: 'Harry Potter');
-
-    return Center(
-        child: resultado.match(
-      (l) => const Text('personaje no encontrado'),
-      (r) => CharacterCardView(character: r),
-    ));
+    return BlocBuilder<HpCardBloc, HpCardState>(
+      builder: (context, state) {
+        if (state is HpCardInitial) {
+          context
+              .read<HpCardBloc>()
+              .add(SelectedCharacterCard(characterName: 'Harry Potter'));
+        }
+        if (state is ShowingCharacterCard) {
+          return CharacterCardView(character: state.character);
+        }
+        if (state is ErrorInesperado) {}
+        return const Text('esperando');
+      },
+    );
   }
 }
