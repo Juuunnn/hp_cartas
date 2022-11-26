@@ -67,7 +67,7 @@ class CharacterCardView extends StatelessWidget {
                           ...characterMap.entries.map((e) {
                             return TableRow(children: [
                               CampoTabla(e.key),
-                              RegistroTabla(e.value.toString()),
+                              RegistroTabla(e.value),
                             ]);
                           }).toList(),
                           TableRow(children: [
@@ -146,7 +146,12 @@ class WandaInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (wand == null || wand == Barita.vacia()) {
-      return const Text('no tiene varita');
+      return const Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Center(
+          child: Text('no tiene varita'),
+        ),
+      );
     }
     return Column(
       children: [
