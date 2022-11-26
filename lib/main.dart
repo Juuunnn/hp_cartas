@@ -7,6 +7,7 @@ import 'package:hp_cartas/feature/characterCard/character_card_repo.dart';
 import 'package:hp_cartas/feature/characterCard/view/character_card_view.dart';
 import 'package:hp_cartas/genericView/bad_state_view.dart';
 import 'package:hp_cartas/genericView/loading.dart';
+import 'package:hp_cartas/genericView/unexpected_error_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -52,7 +53,9 @@ class Pantalla extends StatelessWidget {
         if (state is ShowingCharacterCard) {
           return CharacterCardView(character: state.character);
         }
-        if (state is ErrorInesperado) {}
+        if (state is ErrorInesperado) {
+          return UnexpectedError(errorMessage: state.mensaje);
+        }
         return const BadStateView();
       },
     );
