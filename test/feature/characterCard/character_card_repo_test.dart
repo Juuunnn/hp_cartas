@@ -56,6 +56,30 @@ void main() {
             ));
       });
     });
+    test('url vacia de imagen hace que el campo sea null', () {
+      final repo = CharacterCardRepoTest();
+      final resultado =
+          repo.getCharacterData(characterName: 'Victoire Weasley');
+      resultado.match((l) {
+        assert(false);
+      }, (r) {
+        expect(
+            r,
+            HPCharacter.constructor(
+              nameProp: 'Victoire Weasley',
+              speciesProp: 'human',
+              houseProp: '',
+              genderProp: 'female',
+              dateOfBirthProp: '',
+              ancestryProp: '',
+              patronusProp: '',
+              wandProp: Barita(wood: "", core: "", length: null),
+              hogwartsStudentProp: true,
+              hogwartsStaffProp: false,
+              imageUrl: '',
+            ));
+      });
+    });
     test(
         'poder obtener un HPCharacter desde un json que es un arreglo de objetos',
         () {

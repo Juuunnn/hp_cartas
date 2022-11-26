@@ -150,7 +150,7 @@ class WandaInfo extends StatelessWidget {
         children: [
           Text(wand!.wood),
           Text(wand!.core),
-          Text(wand!.length.toString()),
+          Text(wand?.length.toString() ?? 'n/a'),
         ],
       );
     }
