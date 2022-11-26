@@ -145,15 +145,15 @@ class WandaInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (wand != null) {
-      return Column(
-        children: [
-          Text(wand!.wood),
-          Text(wand!.core),
-          Text(wand?.length.toString() ?? 'n/a'),
-        ],
-      );
+    if (wand == null || wand == Barita.vacia()) {
+      return const Text('no tiene varita');
     }
-    return const Text('no tiene varita');
+    return Column(
+      children: [
+        Text(wand!.wood),
+        Text(wand!.core),
+        Text(wand?.length.toString() ?? 'n/a'),
+      ],
+    );
   }
 }

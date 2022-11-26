@@ -182,6 +182,11 @@ class Barita {
     required this.core,
     required this.length,
   });
+  Barita.vacia({
+    this.wood = '',
+    this.core = '',
+    this.length,
+  });
 
   Barita copyWith({
     String? wood,
