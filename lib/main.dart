@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hp_cartas/bloc/hp_card_bloc.dart';
 import 'package:hp_cartas/feature/characterCard/character_card_repo.dart';
 import 'package:hp_cartas/feature/characterCard/view/character_card_view.dart';
+import 'package:hp_cartas/feature/characterCard/view/character_list_view.dart';
 import 'package:hp_cartas/genericView/bad_state_view.dart';
 import 'package:hp_cartas/genericView/loading.dart';
 import 'package:hp_cartas/genericView/unexpected_error_view.dart';
@@ -45,16 +46,24 @@ class Pantalla extends StatelessWidget {
     return BlocBuilder<HpCardBloc, HpCardState>(
       builder: (context, state) {
         if (state is HpCardInitial) {
-          context
-              .read<HpCardBloc>()
-              .add(SelectedCharacterCard(characterName: 'Harry Potter'));
+          context.read<HpCardBloc>().add(NavegatedToCharacterList());
           return const Loading();
         }
         if (state is ShowingCharacterCard) {
           return CharacterCardView(character: state.character);
         }
+        if (state is ShowingCharacterList) {
+          return CharacterListView(
+            characterList: state.characterList,
+            onClick: (String characterName) {
+              context
+                  .read<HpCardBloc>()
+                  .add(SelectedCharacterCard(characterName: characterName));
+            },
+          );
+        }
         if (state is ErrorInesperado) {
-          return UnexpectedError(errorMessage: state.mensaje);
+          return UnexpectedErrorView(problem: state.problem);
         }
         return const BadStateView();
       },

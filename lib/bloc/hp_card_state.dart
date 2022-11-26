@@ -19,17 +19,20 @@ class ShowingCharacterCard extends HpCardState {
 }
 
 class ShowingCharacterList extends HpCardState {
+  final List<String> characterList;
+
+  ShowingCharacterList(this.characterList);
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [characterList];
 }
 
 abstract class EstadoProblemaEsperado extends HpCardState {}
 
 class ErrorInesperado extends EstadoProblemaEsperado {
-  final String mensaje;
+  final Problem problem;
 
-  ErrorInesperado(this.mensaje);
+  ErrorInesperado(this.problem);
 
   @override
-  List<Object?> get props => [mensaje];
+  List<Object?> get props => [problem];
 }
