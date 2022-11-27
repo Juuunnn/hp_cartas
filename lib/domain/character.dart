@@ -15,20 +15,7 @@ class HPCharacter {
   final Barita? wand;
   final bool hogwartsStudent;
   final bool hogwartsStaff;
-  final String? image;
-  HPCharacter({
-    required this.name,
-    required this.species,
-    required this.house,
-    required this.gender,
-    required this.dateOfBirth,
-    required this.ancestry,
-    required this.patronus,
-    this.wand,
-    required this.hogwartsStudent,
-    required this.hogwartsStaff,
-    this.image,
-  });
+  late final String? image;
 
   HPCharacter._(
       {required this.name,
@@ -59,22 +46,22 @@ class HPCharacter {
     if (nameProp.trim().isEmpty) throw InvalidName();
     if (speciesProp.trim().isEmpty) throw InvalidSpecies();
     if (genderProp.trim().isEmpty) throw InvalidGender();
-    if (imageUrl != null) {
-      if (!Uri.parse(imageUrl).isAbsolute) throw InvalidImageUrl();
-    }
+    // if (imageUrl != null) {
+    //   if (!Uri.parse(imageUrl).isAbsolute) throw InvalidImageUrl();
+    // }
 
     return HPCharacter._(
       name: nameProp,
       species: speciesProp,
-      house: houseProp ?? 'n/a',
+      house: isNotEmpty(houseProp),
       gender: genderProp,
-      dateOfBirth: dateOfBirthProp ?? 'n/a',
-      ancestry: ancestryProp ?? 'n/a',
-      patronus: patronusProp ?? 'n/a',
+      dateOfBirth: isNotEmpty(dateOfBirthProp),
+      ancestry: isNotEmpty(ancestryProp),
+      patronus: isNotEmpty(patronusProp),
       wand: wandProp,
       hogwartsStudent: hogwartsStudentProp,
       hogwartsStaff: hogwartsStaffProp,
-      image: imageUrl,
+      image: imageUrl != '' ? imageUrl : null,
     );
   }
 
@@ -91,18 +78,18 @@ class HPCharacter {
     bool? hogwartsStaff,
     String? image,
   }) {
-    return HPCharacter(
-      name: name ?? this.name,
-      species: species ?? this.species,
-      house: house ?? this.house,
-      gender: gender ?? this.gender,
-      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
-      ancestry: ancestry ?? this.ancestry,
-      patronus: patronus ?? this.patronus,
-      wand: wand ?? this.wand,
-      hogwartsStudent: hogwartsStudent ?? this.hogwartsStudent,
-      hogwartsStaff: hogwartsStaff ?? this.hogwartsStaff,
-      image: image ?? this.image,
+    return HPCharacter.constructor(
+      nameProp: name ?? this.name,
+      speciesProp: species ?? this.species,
+      houseProp: house ?? this.house,
+      genderProp: gender ?? this.gender,
+      dateOfBirthProp: dateOfBirth ?? this.dateOfBirth,
+      ancestryProp: ancestry ?? this.ancestry,
+      patronusProp: patronus ?? this.patronus,
+      wandProp: wand ?? this.wand,
+      hogwartsStudentProp: hogwartsStudent ?? this.hogwartsStudent,
+      hogwartsStaffProp: hogwartsStaff ?? this.hogwartsStaff,
+      imageUrl: image ?? this.image,
     );
   }
 
@@ -123,20 +110,20 @@ class HPCharacter {
   }
 
   factory HPCharacter.fromMap(Map<String, dynamic> map) {
-    return HPCharacter(
-      name: map['name'] as String,
-      species: map['species'] as String,
-      house: map['house'] as String,
-      gender: map['gender'] as String,
-      dateOfBirth: map['dateOfBirth'] as String,
-      ancestry: map['ancestry'] as String,
-      patronus: map['patronus'] as String,
-      wand: map['wand'] != null
+    return HPCharacter.constructor(
+      nameProp: map['name'] as String,
+      speciesProp: map['species'] as String,
+      houseProp: map['house'] as String,
+      genderProp: map['gender'] as String,
+      dateOfBirthProp: map['dateOfBirth'] as String,
+      ancestryProp: map['ancestry'] as String,
+      patronusProp: map['patronus'] as String,
+      wandProp: map['wand'] != null
           ? Barita.fromMap(map['wand'] as Map<String, dynamic>)
           : null,
-      hogwartsStudent: map['hogwartsStudent'] as bool,
-      hogwartsStaff: map['hogwartsStaff'] as bool,
-      image: map['image'] != null ? map['image'] as String : null,
+      hogwartsStudentProp: map['hogwartsStudent'] as bool,
+      hogwartsStaffProp: map['hogwartsStaff'] as bool,
+      imageUrl: map['image'] != null ? map['image'] as String : null,
     );
   }
 
@@ -186,18 +173,23 @@ class HPCharacter {
 class Barita {
   final String wood;
   final String core;
-  final int length;
+  final num? length;
 
   Barita({
     required this.wood,
     required this.core,
     required this.length,
   });
+  Barita.vacia({
+    this.wood = '',
+    this.core = '',
+    this.length,
+  });
 
   Barita copyWith({
     String? wood,
     String? core,
-    int? length,
+    num? length,
   }) {
     return Barita(
       wood: wood ?? this.wood,
@@ -218,7 +210,7 @@ class Barita {
     return Barita(
       wood: map['wood'] as String,
       core: map['core'] as String,
-      length: map['length'] as int,
+      length: map['length'] != null ? map['length'] as num : null,
     );
   }
 
@@ -239,4 +231,11 @@ class Barita {
 
   @override
   int get hashCode => wood.hashCode ^ core.hashCode ^ length.hashCode;
+}
+
+String isNotEmpty(String? string) {
+  const defaultReturn = 'n/a';
+  if (string == null) return defaultReturn;
+  if (string.trim().isEmpty) return defaultReturn;
+  return string;
 }
