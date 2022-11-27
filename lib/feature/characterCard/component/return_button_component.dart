@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fpdart/fpdart.dart';
 
 class ReturnButton extends StatelessWidget {
   const ReturnButton({
@@ -15,12 +16,15 @@ class ReturnButton extends StatelessWidget {
       child: Positioned(
         right: 20,
         bottom: 20,
-        child: FloatingActionButton.extended(
-          onPressed: onReturn,
-          label: const Text('return'),
-          icon: const Icon(Icons.arrow_back),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(0, 0, 40.0, 20),
+          child: FloatingActionButton.extended(
+            onPressed: onReturn,
+            label: const Text('return'),
+            icon: const Icon(Icons.arrow_back),
 
-          // elevation: 8,
+            // elevation: 8,
+          ),
         ),
       ),
     );
