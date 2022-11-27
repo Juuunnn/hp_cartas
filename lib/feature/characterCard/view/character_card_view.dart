@@ -16,7 +16,7 @@ class CharacterCardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
-      CharacterCard(character: character),
+      SingleChildScrollView(child: CharacterCard(character: character)),
       ReturnButton(onReturn: onReturn),
     ]);
   }

@@ -9,6 +9,24 @@ class CharacterListView extends StatelessWidget {
   final Function(String characterName) onClick;
   @override
   Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: CharacterList(characterList: characterList, onClick: onClick),
+    );
+  }
+}
+
+class CharacterList extends StatelessWidget {
+  const CharacterList({
+    Key? key,
+    required this.characterList,
+    required this.onClick,
+  }) : super(key: key);
+
+  final List<String> characterList;
+  final Function(String characterName) onClick;
+
+  @override
+  Widget build(BuildContext context) {
     return Center(
       child: SizedBox(
         width: 400,

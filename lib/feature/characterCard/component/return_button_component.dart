@@ -11,13 +11,17 @@ class ReturnButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.bottomCenter,
-      child: FloatingActionButton.extended(
-        onPressed: onReturn,
-        label: const Text('return'),
-        icon: const Icon(Icons.arrow_back),
+      alignment: Alignment.bottomRight,
+      child: Positioned(
+        right: 20,
+        bottom: 20,
+        child: FloatingActionButton.extended(
+          onPressed: onReturn,
+          label: const Text('return'),
+          icon: const Icon(Icons.arrow_back),
 
-        // elevation: 8,
+          // elevation: 8,
+        ),
       ),
     );
   }
