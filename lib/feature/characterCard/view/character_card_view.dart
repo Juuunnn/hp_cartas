@@ -6,8 +6,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hp_cartas/domain/character.dart';
 
 class CharacterCardView extends StatelessWidget {
-  const CharacterCardView({super.key, required this.character});
+  const CharacterCardView(
+      {super.key, required this.character, required this.onReturn});
   final HPCharacter character;
+  final Function() onReturn;
   @override
   Widget build(BuildContext context) {
     Map<String, dynamic> characterMap = jsonDecode(character.toJson());
@@ -19,6 +21,36 @@ class CharacterCardView extends StatelessWidget {
           'image',
         ].contains(key) ||
         value is! String);
+    return Stack(children: [
+      CharacterCard(character: character, characterMap: characterMap),
+      Align(
+        alignment: Alignment.bottomRight,
+        widthFactor: 50,
+        heightFactor: 50,
+        child: FloatingActionButton.extended(
+          onPressed: onReturn,
+          label: const Text('return'),
+          icon: const Icon(Icons.arrow_back),
+
+          // elevation: 8,
+        ),
+      ),
+    ]);
+  }
+}
+
+class CharacterCard extends StatelessWidget {
+  const CharacterCard({
+    Key? key,
+    required this.character,
+    required this.characterMap,
+  }) : super(key: key);
+
+  final HPCharacter character;
+  final Map<String, dynamic> characterMap;
+
+  @override
+  Widget build(BuildContext context) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

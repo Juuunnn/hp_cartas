@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.brown,
         ),
         home: Scaffold(
           appBar: AppBar(
@@ -50,7 +50,12 @@ class Pantalla extends StatelessWidget {
           return const Loading();
         }
         if (state is ShowingCharacterCard) {
-          return CharacterCardView(character: state.character);
+          return CharacterCardView(
+            character: state.character,
+            onReturn: () {
+              context.read<HpCardBloc>().add(NavegatedToCharacterList());
+            },
+          );
         }
         if (state is ShowingCharacterList) {
           return CharacterListView(
