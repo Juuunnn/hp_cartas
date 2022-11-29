@@ -3,14 +3,27 @@ import 'package:equatable/equatable.dart';
 import 'package:hp_cartas/domain/character.dart';
 import 'package:hp_cartas/domain/problem.dart';
 import 'package:hp_cartas/feature/characterCard/character_card_repo.dart';
+import 'package:hp_cartas/feature/characterDataProvider/character_data_provider.dart';
 import 'package:meta/meta.dart';
 
 part 'hp_card_event.dart';
 part 'hp_card_state.dart';
 
 class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
-  final CharacterCardRepo cardRepo = CharacterCardRepoTest();
-  HpCardBloc._() : super(LoadingData()) {
+  final CharacterCardRepo cardRepo;
+  final CharacterDataProvider dataProvider;
+  HpCardBloc._({
+    required this.cardRepo,
+    required this.dataProvider,
+  }) : super(HpCardInitial()) {
+    on<StartedLoadingData>((event, emit) async {
+      final dataRecived = await dataProvider.getFromAPI(event.apiUrl);
+      dataRecived.match((l) {
+        // emit();
+      }, (r) {
+        add(NavegatedToCharacterList());
+      });
+    });
     on<SelectedCharacterCard>((event, emit) {
       final result =
           cardRepo.getCharacterData(characterName: event.characterName);
@@ -29,8 +42,22 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
       }));
     });
   }
-  factory HpCardBloc.constructor() {
-    return HpCardBloc._();
+  factory HpCardBloc.constructor({
+    required String apiUrl,
+    required CharacterCardRepo cardRepo,
+    required CharacterDataProvider dataProvider,
+  }) {
+    HpCardBloc bloc =
+        HpCardBloc._(cardRepo: cardRepo, dataProvider: dataProvider);
+    bloc.add(StartedLoadingData(apiUrl: apiUrl));
+    return bloc;
+  }
+  factory HpCardBloc.tester({required String apiUrl}) {
+    HpCardBloc bloc = HpCardBloc._(
+        cardRepo: CharacterCardRepoTest(),
+        dataProvider: CharacterDataObtainerTest());
+    bloc.add(StartedLoadingData(apiUrl: apiUrl));
+    return bloc;
   }
 }
 

@@ -10,6 +10,8 @@ import 'package:hp_cartas/genericView/bad_state_view.dart';
 import 'package:hp_cartas/genericView/loading.dart';
 import 'package:hp_cartas/genericView/unexpected_error_view.dart';
 
+const String apiUrl = ' ';
+
 void main() {
   runApp(const MyApp());
 }
@@ -19,9 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) {
-        return HpCardBloc.constructor();
-      },
+      create: (context) => HpCardBloc.tester(apiUrl: apiUrl),
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
