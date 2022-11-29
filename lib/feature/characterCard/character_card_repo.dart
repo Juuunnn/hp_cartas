@@ -7,21 +7,19 @@ import 'package:hp_cartas/domain/problem.dart';
 
 abstract class CharacterCardRepo {
   Either<Problem, HPCharacter> getCharacterData(
-      {required String characterName});
-  Either<Problem, List<String>> getCharacterNameList();
+      {required String characterName, required String elJson});
+  Either<Problem, List<String>> getCharacterNameList({required String elJson});
 }
 
 class CharacterCardRepoTest extends CharacterCardRepo {
   @override
   Either<Problem, HPCharacter> getCharacterData(
-      {required String characterName}) {
-    final elJson = File('test/characters.json').readAsStringSync();
+      {required String characterName, required String elJson}) {
     return getDataFromList(elJson, characterName);
   }
 
   @override
-  Either<Problem, List<String>> getCharacterNameList() {
-    final elJson = File('test/characters.json').readAsStringSync();
+  Either<Problem, List<String>> getCharacterNameList({required String elJson}) {
     return getListData(elJson);
   }
 }

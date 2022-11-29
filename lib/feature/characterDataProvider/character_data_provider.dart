@@ -21,13 +21,13 @@ import 'package:hp_cartas/domain/problem.dart';
 
 abstract class CharacterDataProvider {
   // Future<Either<Problem, String>> getFromLocalDB(String file);
-  Future<Either<Problem, String>> getFromAPI(String url);
+  Future<Either<ProblemDataParse, String>> getFromAPI(String url);
 }
 
 class CharacterDataObtainerTest extends CharacterDataProvider {
   @override
-  Future<Either<Problem, String>> getFromAPI(String url) async {
-    late final elJson;
+  Future<Either<ProblemDataParse, String>> getFromAPI(String url) async {
+    late final String elJson;
     try {
       elJson = await File(url).readAsString();
     } catch (e) {

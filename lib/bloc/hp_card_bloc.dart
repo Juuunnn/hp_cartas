@@ -12,6 +12,7 @@ part 'hp_card_state.dart';
 class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
   final CharacterCardRepo cardRepo;
   final CharacterDataProvider dataProvider;
+  late final String rawData;
   HpCardBloc._({
     required this.cardRepo,
     required this.dataProvider,
@@ -19,14 +20,15 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
     on<StartedLoadingData>((event, emit) async {
       final dataRecived = await dataProvider.getFromAPI(event.apiUrl);
       dataRecived.match((l) {
-        // emit();
+        emit(DataComunicatioError(l));
       }, (r) {
+        rawData = r;
         add(NavegatedToCharacterList());
       });
     });
     on<SelectedCharacterCard>((event, emit) {
-      final result =
-          cardRepo.getCharacterData(characterName: event.characterName);
+      final result = cardRepo.getCharacterData(
+          characterName: event.characterName, elJson: rawData);
       result.match((l) {
         emit(ErrorInesperado(l));
       }, ((r) {
@@ -34,7 +36,7 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
       }));
     });
     on<NavegatedToCharacterList>((event, emit) {
-      final result = cardRepo.getCharacterNameList();
+      final result = cardRepo.getCharacterNameList(elJson: rawData);
       result.match((l) {
         emit(ErrorInesperado(l));
       }, ((r) {

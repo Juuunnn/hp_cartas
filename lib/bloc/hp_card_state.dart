@@ -41,3 +41,12 @@ class ErrorInesperado extends EstadoProblemaEsperado {
   @override
   List<Object?> get props => [problem];
 }
+
+class DataComunicatioError extends EstadoProblemaEsperado {
+  final ProblemDataParse parseProblem;
+
+  DataComunicatioError(this.parseProblem);
+
+  @override
+  List<Object?> get props => [parseProblem];
+}

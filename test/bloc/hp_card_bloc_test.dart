@@ -4,15 +4,22 @@ import 'package:hp_cartas/bloc/hp_card_bloc.dart';
 import 'package:hp_cartas/domain/character.dart';
 import 'package:hp_cartas/feature/characterCard/character_card_repo.dart';
 
-import '../feature/characterDataObtainer/character_data_provider_test.dart';
+const String testUrl = 'test/characters.json';
+
+const duration = Duration(milliseconds: 100);
 
 void main() {
   group('hp card bloc debe', () {
     blocTest<HpCardBloc, HpCardState>(
       'deve poder mostrar la tarjeta de un personaje',
       build: () => HpCardBloc.tester(apiUrl: testUrl),
-      act: (bloc) =>
-          bloc.add(SelectedCharacterCard(characterName: 'Harry Potter')),
+      act: (bloc) {
+        Future.delayed(duration, () {
+          bloc.add(SelectedCharacterCard(characterName: 'Harry Potter'));
+        });
+      },
+      wait: duration,
+      skip: 1,
       expect: () => [
         ShowingCharacterCard(HPCharacter.constructor(
           nameProp: 'Harry Potter',
@@ -30,10 +37,23 @@ void main() {
       ],
     );
     blocTest<HpCardBloc, HpCardState>(
-      'deve poder mostrar la lista de personajes ',
+      'deve poder mostrar la lista de personajes despues de mostrar tarjeta ',
       build: () => HpCardBloc.tester(apiUrl: testUrl),
-      act: (bloc) => bloc.add(NavegatedToCharacterList()),
+      act: (bloc) {
+        Future.delayed(duration, () {
+          bloc.add(SelectedCharacterCard(characterName: 'Harry Potter'));
+          bloc.add(NavegatedToCharacterList());
+        });
+      },
+      wait: duration,
+      skip: 2,
       expect: () => [isA<ShowingCharacterList>()],
+    );
+    blocTest<HpCardBloc, HpCardState>(
+      'deve poder tirar mala comunicacion',
+      build: () => HpCardBloc.tester(apiUrl: 'adsfa'),
+      wait: duration,
+      expect: () => [isA<DataComunicatioError>()],
     );
   });
 }
