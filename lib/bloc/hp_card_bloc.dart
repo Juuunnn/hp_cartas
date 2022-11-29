@@ -10,7 +10,7 @@ part 'hp_card_state.dart';
 
 class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
   final CharacterCardRepo cardRepo = CharacterCardRepoTest();
-  HpCardBloc() : super(HpCardInitial()) {
+  HpCardBloc._() : super(LoadingData()) {
     on<SelectedCharacterCard>((event, emit) {
       final result =
           cardRepo.getCharacterData(characterName: event.characterName);
@@ -28,6 +28,9 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
         emit(ShowingCharacterList(r));
       }));
     });
+  }
+  factory HpCardBloc.constructor() {
+    return HpCardBloc._();
   }
 }
 

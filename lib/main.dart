@@ -19,7 +19,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => HpCardBloc(),
+      create: (context) {
+        return HpCardBloc.constructor();
+      },
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(

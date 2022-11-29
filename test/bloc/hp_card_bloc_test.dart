@@ -7,7 +7,7 @@ void main() {
   group('hp card bloc debe', () {
     blocTest<HpCardBloc, HpCardState>(
       'deve poder mostrar la tarjeta de un personaje',
-      build: () => HpCardBloc(),
+      build: () => HpCardBloc.constructor(),
       act: (bloc) =>
           bloc.add(SelectedCharacterCard(characterName: 'Harry Potter')),
       expect: () => [
@@ -28,7 +28,7 @@ void main() {
     );
     blocTest<HpCardBloc, HpCardState>(
       'deve poder mostrar la lista de personajes ',
-      build: () => HpCardBloc(),
+      build: () => HpCardBloc.constructor(),
       act: (bloc) => bloc.add(NavegatedToCharacterList()),
       expect: () => [isA<ShowingCharacterList>()],
     );

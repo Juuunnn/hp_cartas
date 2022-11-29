@@ -9,6 +9,11 @@ class HpCardInitial extends HpCardState {
   List<Object?> get props => [];
 }
 
+class LoadingData extends HpCardState {
+  @override
+  List<Object?> get props => [];
+}
+
 class ShowingCharacterCard extends HpCardState {
   final HPCharacter character;
 
