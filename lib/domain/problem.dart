@@ -15,3 +15,9 @@ class UnknownProblem extends Problem {
 
   UnknownProblem(this.problema);
 }
+
+abstract class ProblemDataParse extends Problem {}
+
+class InvalidDataRecived extends ProblemDataParse {}
+
+class BadAPIConection extends ProblemDataParse {}

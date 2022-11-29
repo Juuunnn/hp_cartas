@@ -10,6 +10,7 @@
 
 // debe devolver el json en string
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:fpdart/fpdart.dart';
@@ -22,9 +23,19 @@ abstract class CharacterDataProvider {
 
 class CharacterDataObtainerTest extends CharacterDataProvider {
   @override
-  Future<Either<Problem, String>> getFromAPI(String url) {
-    // TODO: implement getFromAPI
-    throw UnimplementedError();
+  Future<Either<Problem, String>> getFromAPI(String url) async {
+    late final elJson;
+    try {
+      elJson = await File(url).readAsString();
+    } catch (e) {
+      return Future.value(left(BadAPIConection()));
+    }
+    try {
+      List<dynamic> listaCharacters = jsonDecode(elJson);
+    } catch (e) {
+      return Future.value(left(InvalidDataRecived()));
+    }
+    return Future.value(right(elJson));
   }
 
   // @override
