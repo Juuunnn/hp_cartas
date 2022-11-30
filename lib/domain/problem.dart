@@ -30,4 +30,8 @@ abstract class ProblemCharacterSerch extends Problem {}
 
 class CharacterCodeNotFound extends ProblemCharacterSerch {}
 
-class InvalidCode extends ProblemCharacterSerch {}
+abstract class InvalidCode extends Problem {}
+
+class EmptyInput extends InvalidCode {}
+
+class IsNotNumber extends InvalidCode {}

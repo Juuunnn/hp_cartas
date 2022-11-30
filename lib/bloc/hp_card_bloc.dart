@@ -25,21 +25,34 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
   }) : super(HpCardInitial()) {
     on<InputedCharacterCode>((event, emit) {
       emit(LoadingData());
-      try {
+      Either<Problem, CodeInput> codigo() {
+        try {
+          return right(CodeInput.constructor(event.propCharacter));
+        } on InvalidCode catch (e) {
+          return left(e);
+        } catch (e) {
+          return left(UnknownProblem(e.toString()));
+        }
+      }
+
+      codigo().match((l) {
+        if (l is InvalidCode) {
+          emit(BadCodeInput(l));
+        } else {
+          emit(ErrorInesperado(l));
+        }
+      }, (r) {
         final characterObtained = cardRepo.getCharacterCharacterWithCode(
-            characterCode: CodeInput.constructor(event.propCharacter),
-            elJson: rawData);
+            characterCode: r, elJson: rawData);
         characterObtained.match(
           (l) {
-            emit(ErrorInesperado(l));
+            emit(NoMatchForCharacterCode());
           },
           (r) {
             emit(ShowingNewCharacterObtained(r));
           },
         );
-      } catch (e) {
-        emit(ErrorInesperado(UnknownProblem(e.toString())));
-      }
+      });
     });
     on<ObtainedNewCharacter>((event, emit) {
       final fullCharacterList = cardRepo.getCharacterNameList(elJson: rawData);

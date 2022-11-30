@@ -36,6 +36,32 @@ void main() {
       skip: 1,
       expect: () => [isA<LoadingData>(), isA<ShowingNewCharacterObtained>()],
     );
+    blocTest<HpCardBloc, HpCardState>(
+      'deve tirar error cuando el codigo es malo',
+      build: () =>
+          HpCardBloc.tester(apiUrl: testUrl, daylyCharacterObtained: true),
+      act: (bloc) {
+        Future.delayed(duration, () {
+          bloc.add(InputedCharacterCode('28j3t129'));
+        });
+      },
+      wait: duration,
+      skip: 1,
+      expect: () => [isA<LoadingData>(), isA<BadCodeInput>()],
+    );
+    blocTest<HpCardBloc, HpCardState>(
+      'deve tirar error cuando el codigo no corresponde a un personaje',
+      build: () =>
+          HpCardBloc.tester(apiUrl: testUrl, daylyCharacterObtained: true),
+      act: (bloc) {
+        Future.delayed(duration, () {
+          bloc.add(InputedCharacterCode('289311628'));
+        });
+      },
+      wait: duration,
+      skip: 1,
+      expect: () => [isA<LoadingData>(), isA<NoMatchForCharacterCode>()],
+    );
     // blocTest<HpCardBloc, HpCardState>(
     //   'deve poder mostrar la tarjeta de un personaje que contiene',
     //   build: () =>
