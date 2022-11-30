@@ -199,29 +199,66 @@ void main() {
         expect(r, ['Harry Potter', 'Draco Malfoy']);
       });
     });
-    //estas pruebas son considerando la bd real
-    group('datos del json deben cumplir con...', () {
-      test('todos los personajes deben generar un hashcode distinto', () {
-        // TODO: el codigo hash si se esta repitiendo, necesito averiguar por que
-        // parece haber 4 nombres repetidos
-        //necesito averiguar cuales son y si cumplen con las mismas caracteristicas
-        final repo = CharacterCardRepoTest();
-        final dataList = repo.getCharacterNameList(elJson: elJson);
-        dataList.match(
-          (l) {
-            assert(false);
-          },
-          (r) {
-            final result = r.map((e) {
-              return repo
-                  .getCharacterData(characterName: e, elJson: elJson)
-                  .match((l) => left(l), (r) => right(r.hashCode));
-            }).toSet();
-            expect(result.length, r.length);
-            expect(false, result.any((element) => element.isLeft()));
-          },
-        );
+  });
+  group('getCharacterCharacterWithCode debe ', () {
+    test('debolver Albert Runcorn con el codigo: 289311629', () {
+      final repo = CharacterCardRepoTest();
+      final resultado = repo.getCharacterCharacterWithCode(
+          characterCode: '289311629', elJson: elJson);
+      resultado.match((l) {
+        assert(false);
+      }, (r) {
+        expect(
+            r,
+            HPCharacter.constructor(
+              nameProp: 'Harry Potter',
+              speciesProp: 'human',
+              houseProp: 'Gryffindor',
+              genderProp: 'male',
+              dateOfBirthProp: '31-07-1980',
+              ancestryProp: 'half-blood',
+              patronusProp: 'stag',
+              wandProp:
+                  Barita(wood: "holly", core: "phoenix feather", length: 11),
+              hogwartsStudentProp: true,
+              hogwartsStaffProp: false,
+              imageUrl: 'https://hp-api.herokuapp.com/images/harry.jpg',
+            ));
       });
+    });
+    test('debolver error con el codigo: 289311', () {
+      final repo = CharacterCardRepoTest();
+      final resultado = repo.getCharacterCharacterWithCode(
+          characterCode: '289311629', elJson: elJson);
+      resultado.match((l) {
+        expect(l, isA<CharacterCodeNotFound>());
+      }, (r) {
+        assert(false);
+      });
+    });
+  });
+  //estas pruebas son considerando la bd real
+  group('datos del json deben cumplir con...', () {
+    test('todos los personajes deben generar un hashcode distinto', () {
+      // TODO: el codigo hash si se esta repitiendo, necesito averiguar por que
+      // parece haber 4 nombres repetidos
+      //necesito averiguar cuales son y si cumplen con las mismas caracteristicas
+      final repo = CharacterCardRepoTest();
+      final dataList = repo.getCharacterNameList(elJson: elJson);
+      dataList.match(
+        (l) {
+          assert(false);
+        },
+        (r) {
+          final result = r.map((e) {
+            return repo
+                .getCharacterData(characterName: e, elJson: elJson)
+                .match((l) => left(l), (r) => right(r.hashCode));
+          }).toSet();
+          expect(result.length, r.length);
+          expect(false, result.any((element) => element.isLeft()));
+        },
+      );
     });
   });
 }
