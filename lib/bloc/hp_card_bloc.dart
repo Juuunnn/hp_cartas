@@ -96,10 +96,6 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
 }
 
 
-	// TODO: 3. tener solo los personajes obtenidos y desbloquear/obtener los personajes con un sistema simple
-	// 	mostrar que se obtuvo un nuevo personaje
-	// >		obtener un personaje aleatoriamente cada nueva entrada diaria a la aplicacion
-
 	// TODO: 4. tener una coleccion de todos los personajes obtenidos
 	// 	mostrar solo los personajes obtenidos
 	// 	mostrar un marcador cuantos personajes unicos hay en total

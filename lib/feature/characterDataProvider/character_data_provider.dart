@@ -1,17 +1,13 @@
 // ignore: todo
 //TODO: adminisrar personajes almacenados localmente y los obtenidos de la api
-// states: loading, new character unlocked, getting character, getting character list from api,
+// states: new character unlocked, getting character,
 //
-//      finished:  bad comunication, bad response format
+//      finished:loading getting character list from api,  bad comunication, bad response format
 
-// events: got character, got character list
-// screens: character obtained view,
+// finished events: got character, got character list
+// finished screens: character obtained view,
 
 // obtener personaje de bd Local
-
-// obtener personaje de api
-
-// debe devolver el json en string
 
 import 'dart:convert';
 import 'dart:io';
@@ -33,12 +29,7 @@ class CharacterDataObtainerTest extends CharacterDataProvider {
     } catch (e) {
       return Future.value(left(BadAPIConection()));
     }
-    try {
-      List<dynamic> listaCharacters = jsonDecode(elJson);
-    } catch (e) {
-      return Future.value(left(InvalidDataRecived()));
-    }
-    return Future.value(right(elJson));
+    return Future.value(validateData(elJson));
   }
 
   // @override
@@ -46,4 +37,13 @@ class CharacterDataObtainerTest extends CharacterDataProvider {
   //   // TODO: implement getFromLocalDB
   //   throw UnimplementedError();
   // }
+}
+
+Either<ProblemDataParse, String> validateData(String data) {
+  try {
+    List<dynamic> listaCharacters = jsonDecode(data);
+  } catch (e) {
+    return left(InvalidDataRecived());
+  }
+  return right(data);
 }
