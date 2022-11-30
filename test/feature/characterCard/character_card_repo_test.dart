@@ -215,9 +215,9 @@ void main() {
             final result = r.map((e) {
               return repo
                   .getCharacterData(characterName: e, elJson: elJson)
-                  .match((l) => left(l), (r) => right(r.name));
+                  .match((l) => left(l), (r) => right(r.hashCode));
             }).toSet();
-            expect(result.length, 403);
+            expect(result.length, r.length);
             expect(false, result.any((element) => element.isLeft()));
           },
         );

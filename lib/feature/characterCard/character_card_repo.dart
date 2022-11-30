@@ -42,8 +42,8 @@ Either<Problem, List<String>> getListData(String ejJson) {
   try {
     List<dynamic> listaCharacters = jsonDecode(ejJson);
     final resultado = listaCharacters.map((e) => e["name"].toString()).toList();
-
-    return right(resultado);
+    return right(resultado.toSet().toList());
+    // return right(resultado);
   } catch (e) {
     return left(UnknownProblem(e.toString()));
   }
