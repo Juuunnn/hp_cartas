@@ -72,6 +72,7 @@ class Pantalla extends StatelessWidget {
                   .read<HpCardBloc>()
                   .add(SelectedCharacterCard(characterName: characterName));
             },
+            obtainedCharacters: state.obtainedCharacters,
           );
         }
         if (state is ShowingNewCharacterObtained) {

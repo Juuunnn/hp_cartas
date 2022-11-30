@@ -65,7 +65,8 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
           daylyCharacterObtained = true;
           add(ObtainedNewCharacter());
         }
-        emit(ShowingCharacterList(r));
+        emit(ShowingCharacterList(
+            r, obtainedCharacters.map((e) => e.name).toList()));
       }));
     });
   }

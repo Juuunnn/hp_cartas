@@ -34,10 +34,11 @@ class ShowingCharacterCard extends HpCardState {
 
 class ShowingCharacterList extends HpCardState {
   final List<String> characterList;
+  final List<String> obtainedCharacters;
 
-  ShowingCharacterList(this.characterList);
+  ShowingCharacterList(this.characterList, this.obtainedCharacters);
   @override
-  List<Object?> get props => [characterList];
+  List<Object?> get props => [characterList, obtainedCharacters];
 }
 
 abstract class EstadoProblemaEsperado extends HpCardState {}

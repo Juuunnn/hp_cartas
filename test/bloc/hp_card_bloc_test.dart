@@ -11,7 +11,7 @@ const duration = Duration(milliseconds: 100);
 void main() {
   group('hp card bloc debe', () {
     blocTest<HpCardBloc, HpCardState>(
-      'deve poder mostrar la tarjeta de un personaje',
+      'deve poder mostrar la tarjeta de un personaje que contiene',
       build: () =>
           HpCardBloc.tester(apiUrl: testUrl, daylyCharacterObtained: true),
       act: (bloc) {
@@ -37,6 +37,33 @@ void main() {
         ))
       ],
     );
+    // blocTest<HpCardBloc, HpCardState>(
+    //   'deve poder mostrar la tarjeta de un personaje que contiene',
+    //   build: () =>
+    //       HpCardBloc.tester(apiUrl: testUrl, daylyCharacterObtained: true),
+    //   act: (bloc) {
+    //     Future.delayed(duration, () {
+    //       bloc.add(SelectedCharacterCard(characterName: 'Harry Potter'));
+    //     });
+    //   },
+    //   wait: duration,
+    //   skip: 1,
+    //   expect: () => [
+    //     ShowingCharacterCard(HPCharacter.constructor(
+    //       nameProp: 'Harry Potter',
+    //       speciesProp: 'human',
+    //       houseProp: 'Gryffindor',
+    //       genderProp: 'male',
+    //       dateOfBirthProp: '31-07-1980',
+    //       ancestryProp: 'half-blood',
+    //       patronusProp: 'stag',
+    //       wandProp: Barita(wood: "holly", core: "phoenix feather", length: 11),
+    //       hogwartsStudentProp: true,
+    //       hogwartsStaffProp: false,
+    //       imageUrl: 'https://hp-api.herokuapp.com/images/harry.jpg',
+    //     ))
+    //   ],
+    // );
     blocTest<HpCardBloc, HpCardState>(
       'deve poder mostrar la lista de personajes despues de mostrar tarjeta ',
       build: () =>
