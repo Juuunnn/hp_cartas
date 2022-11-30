@@ -6,7 +6,7 @@ import 'package:hp_cartas/feature/characterCard/character_card_repo.dart';
 
 const String testUrl = 'test/characters.json';
 
-const duration = Duration(milliseconds: 1000);
+const duration = Duration(milliseconds: 100);
 
 void main() {
   group('hp card bloc debe', () {
