@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:hp_cartas/domain/character.dart';
+import 'package:hp_cartas/domain/code_input.dart';
 import 'package:hp_cartas/domain/problem.dart';
 import 'package:hp_cartas/feature/characterCard/character_card_repo.dart';
 
@@ -204,7 +205,7 @@ void main() {
     test('debolver Albert Runcorn con el codigo: 289311629', () {
       final repo = CharacterCardRepoTest();
       final resultado = repo.getCharacterCharacterWithCode(
-          characterCode: '289311629', elJson: elJson);
+          characterCode: CodeInput.constructor('289311629'), elJson: elJson);
       resultado.match((l) {
         assert(false);
       }, (r) {
@@ -222,29 +223,9 @@ void main() {
     test('debolver error con el codigo: 289311', () {
       final repo = CharacterCardRepoTest();
       final resultado = repo.getCharacterCharacterWithCode(
-          characterCode: '289311', elJson: elJson);
+          characterCode: CodeInput.constructor('289311'), elJson: elJson);
       resultado.match((l) {
         expect(l, isA<CharacterCodeNotFound>());
-      }, (r) {
-        assert(false);
-      });
-    });
-    test('debolver error cuando codigo esta vacio', () {
-      final repo = CharacterCardRepoTest();
-      final resultado =
-          repo.getCharacterCharacterWithCode(characterCode: '', elJson: elJson);
-      resultado.match((l) {
-        expect(l, isA<InvalidCode>());
-      }, (r) {
-        assert(false);
-      });
-    });
-    test('debolver error con el codigo: 28931f6w9', () {
-      final repo = CharacterCardRepoTest();
-      final resultado = repo.getCharacterCharacterWithCode(
-          characterCode: '28931f6w9', elJson: elJson);
-      resultado.match((l) {
-        expect(l, isA<InvalidCode>());
       }, (r) {
         assert(false);
       });

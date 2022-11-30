@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:fpdart/fpdart.dart';
 import 'package:hp_cartas/domain/character.dart';
+import 'package:hp_cartas/domain/code_input.dart';
 import 'package:hp_cartas/domain/problem.dart';
 
 abstract class CharacterCardRepo {
@@ -10,7 +11,7 @@ abstract class CharacterCardRepo {
       {required String characterName, required String elJson});
   Either<Problem, List<String>> getCharacterNameList({required String elJson});
   Either<Problem, HPCharacter> getCharacterCharacterWithCode(
-      {required String characterCode, required String elJson});
+      {required CodeInput characterCode, required String elJson});
 }
 
 class CharacterCardRepoTest extends CharacterCardRepo {
@@ -27,10 +28,7 @@ class CharacterCardRepoTest extends CharacterCardRepo {
 
   @override
   Either<Problem, HPCharacter> getCharacterCharacterWithCode(
-      {required String characterCode, required String elJson}) {
-    if (int.tryParse(characterCode) == null) return left(InvalidCode());
-    if (characterCode.isEmpty) return left(InvalidCode());
-
+      {required CodeInput characterCode, required String elJson}) {
     return getListData(elJson).match((l) => left(l), (r) {
       final resultado = r
           .map((e) => getCharacterData(characterName: e, elJson: elJson)
@@ -42,7 +40,7 @@ class CharacterCardRepoTest extends CharacterCardRepo {
       final personaje = resultado.firstWhere(
           (element) =>
               element.getRight().toNullable().hashCode.toString() ==
-              characterCode,
+              characterCode.searchCode,
           orElse: () => left(CharacterCodeNotFound()));
       return personaje.match((l) => left(l), (r) => right(r));
     });
