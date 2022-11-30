@@ -211,25 +211,18 @@ void main() {
         expect(
             r,
             HPCharacter.constructor(
-              nameProp: 'Harry Potter',
-              speciesProp: 'human',
-              houseProp: 'Gryffindor',
-              genderProp: 'male',
-              dateOfBirthProp: '31-07-1980',
-              ancestryProp: 'half-blood',
-              patronusProp: 'stag',
-              wandProp:
-                  Barita(wood: "holly", core: "phoenix feather", length: 11),
-              hogwartsStudentProp: true,
-              hogwartsStaffProp: false,
-              imageUrl: 'https://hp-api.herokuapp.com/images/harry.jpg',
-            ));
+                nameProp: 'Albert Runcorn',
+                speciesProp: 'human',
+                genderProp: 'male',
+                hogwartsStudentProp: false,
+                hogwartsStaffProp: false,
+                wandProp: Barita.vacia()));
       });
     });
     test('debolver error con el codigo: 289311', () {
       final repo = CharacterCardRepoTest();
       final resultado = repo.getCharacterCharacterWithCode(
-          characterCode: '289311629', elJson: elJson);
+          characterCode: '289311', elJson: elJson);
       resultado.match((l) {
         expect(l, isA<CharacterCodeNotFound>());
       }, (r) {
