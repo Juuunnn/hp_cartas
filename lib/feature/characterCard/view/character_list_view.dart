@@ -13,13 +13,35 @@ class CharacterListView extends StatelessWidget {
   final Function(String characterName) onClick;
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: CharacterList(
-        fullCharacterList: characterList,
-        onClick: onClick,
-        obtainedCharacters: obtainedCharacters,
+    return Stack(children: [
+      CharacterCounter(
+          totalCharacters: characterList.length,
+          currentCharacters: obtainedCharacters.length),
+      SingleChildScrollView(
+        child: CharacterList(
+          fullCharacterList: characterList,
+          onClick: onClick,
+          obtainedCharacters: obtainedCharacters,
+        ),
       ),
-    );
+    ]);
+  }
+}
+
+class CharacterCounter extends StatelessWidget {
+  const CharacterCounter({
+    Key? key,
+    required this.totalCharacters,
+    required this.currentCharacters,
+  }) : super(key: key);
+  final int totalCharacters;
+  final int currentCharacters;
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+        right: 60,
+        top: 20,
+        child: Text('$currentCharacters / $totalCharacters'));
   }
 }
 
