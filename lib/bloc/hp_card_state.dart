@@ -14,6 +14,15 @@ class LoadingData extends HpCardState {
   List<Object?> get props => [];
 }
 
+class ShowingNewCharacterObtained extends HpCardState {
+  final HPCharacter character;
+
+  ShowingNewCharacterObtained(this.character);
+
+  @override
+  List<Object?> get props => [character];
+}
+
 class ShowingCharacterCard extends HpCardState {
   final HPCharacter character;
 

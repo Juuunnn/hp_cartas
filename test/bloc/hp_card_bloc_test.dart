@@ -12,7 +12,8 @@ void main() {
   group('hp card bloc debe', () {
     blocTest<HpCardBloc, HpCardState>(
       'deve poder mostrar la tarjeta de un personaje',
-      build: () => HpCardBloc.tester(apiUrl: testUrl),
+      build: () =>
+          HpCardBloc.tester(apiUrl: testUrl, daylyCharacterObtained: true),
       act: (bloc) {
         Future.delayed(duration, () {
           bloc.add(SelectedCharacterCard(characterName: 'Harry Potter'));
@@ -38,7 +39,8 @@ void main() {
     );
     blocTest<HpCardBloc, HpCardState>(
       'deve poder mostrar la lista de personajes despues de mostrar tarjeta ',
-      build: () => HpCardBloc.tester(apiUrl: testUrl),
+      build: () =>
+          HpCardBloc.tester(apiUrl: testUrl, daylyCharacterObtained: true),
       act: (bloc) {
         Future.delayed(duration, () {
           bloc.add(SelectedCharacterCard(characterName: 'Harry Potter'));
@@ -50,8 +52,15 @@ void main() {
       expect: () => [isA<ShowingCharacterList>()],
     );
     blocTest<HpCardBloc, HpCardState>(
+      'deve desbloquear un nuevo personaje al iniciar',
+      build: () => HpCardBloc.tester(apiUrl: testUrl),
+      verify: (bloc) => bloc.obtainedCharacters.length = 1,
+      wait: duration,
+    );
+    blocTest<HpCardBloc, HpCardState>(
       'deve poder tirar mala comunicacion',
-      build: () => HpCardBloc.tester(apiUrl: 'adsfa'),
+      build: () =>
+          HpCardBloc.tester(apiUrl: 'adsfa', daylyCharacterObtained: true),
       wait: duration,
       expect: () => [isA<DataComunicatioError>()],
     );

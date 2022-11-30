@@ -27,3 +27,5 @@ class StartedLoadingData extends HpCardEvent {
 
   StartedLoadingData({required this.apiUrl});
 }
+
+class ObtainedNewCharacter extends HpCardEvent {}

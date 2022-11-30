@@ -7,6 +7,7 @@ import 'package:hp_cartas/feature/characterCard/character_card_repo.dart';
 import 'package:hp_cartas/feature/characterCard/view/character_card_view.dart';
 import 'package:hp_cartas/feature/characterCard/view/character_list_view.dart';
 import 'package:hp_cartas/feature/characterDataProvider/view/data_provider_error_view.dart';
+import 'package:hp_cartas/feature/characterDataProvider/view/new_character_obtained_view.dart';
 import 'package:hp_cartas/genericView/bad_state_view.dart';
 import 'package:hp_cartas/genericView/loading.dart';
 import 'package:hp_cartas/genericView/unexpected_error_view.dart';
@@ -70,6 +71,14 @@ class Pantalla extends StatelessWidget {
               context
                   .read<HpCardBloc>()
                   .add(SelectedCharacterCard(characterName: characterName));
+            },
+          );
+        }
+        if (state is ShowingNewCharacterObtained) {
+          return NewCharacterObtainedView(
+            character: state.character,
+            onTap: () {
+              context.read<HpCardBloc>().add(NavegatedToCharacterList());
             },
           );
         }
