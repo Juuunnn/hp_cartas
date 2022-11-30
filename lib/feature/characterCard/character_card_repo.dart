@@ -28,6 +28,9 @@ class CharacterCardRepoTest extends CharacterCardRepo {
   @override
   Either<Problem, HPCharacter> getCharacterCharacterWithCode(
       {required String characterCode, required String elJson}) {
+    if (int.tryParse(characterCode) == null) return left(InvalidCode());
+    if (characterCode.isEmpty) return left(InvalidCode());
+
     return getListData(elJson).match((l) => left(l), (r) {
       final resultado = r
           .map((e) => getCharacterData(characterName: e, elJson: elJson)

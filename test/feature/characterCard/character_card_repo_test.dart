@@ -229,6 +229,26 @@ void main() {
         assert(false);
       });
     });
+    test('debolver error cuando codigo esta vacio', () {
+      final repo = CharacterCardRepoTest();
+      final resultado =
+          repo.getCharacterCharacterWithCode(characterCode: '', elJson: elJson);
+      resultado.match((l) {
+        expect(l, isA<InvalidCode>());
+      }, (r) {
+        assert(false);
+      });
+    });
+    test('debolver error con el codigo: 28931f6w9', () {
+      final repo = CharacterCardRepoTest();
+      final resultado = repo.getCharacterCharacterWithCode(
+          characterCode: '28931f6w9', elJson: elJson);
+      resultado.match((l) {
+        expect(l, isA<InvalidCode>());
+      }, (r) {
+        assert(false);
+      });
+    });
   });
   //estas pruebas son considerando la bd real
   group('datos del json deben cumplir con...', () {
