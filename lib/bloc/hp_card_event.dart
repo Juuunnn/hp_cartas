@@ -29,3 +29,9 @@ class StartedLoadingData extends HpCardEvent {
 }
 
 class ObtainedNewCharacter extends HpCardEvent {}
+
+class InputedCharacterCode extends HpCardEvent {
+  final String propCharacter;
+
+  InputedCharacterCode(this.propCharacter);
+}

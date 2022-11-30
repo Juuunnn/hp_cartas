@@ -22,6 +22,7 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
     required this.dataProvider,
     this.daylyCharacterObtained = false,
   }) : super(HpCardInitial()) {
+    on<InputedCharacterCode>((event, emit) => null);
     on<ObtainedNewCharacter>((event, emit) {
       final fullCharacterList = cardRepo.getCharacterNameList(elJson: rawData);
       fullCharacterList.match((l) {

@@ -23,6 +23,18 @@ void main() {
       skip: 2,
       expect: () => [isA<ShowingCharacterCard>()],
     );
+    blocTest<HpCardBloc, HpCardState>(
+      'deve poder obtener un nuevo personaje',
+      build: () =>
+          HpCardBloc.tester(apiUrl: testUrl, daylyCharacterObtained: true),
+      act: (bloc) {
+        Future.delayed(duration, () {
+          bloc.add(InputedCharacterCode('289311629'));
+        });
+      },
+      skip: 1,
+      expect: () => [isA<ShowingNewCharacterObtained>()],
+    );
     // blocTest<HpCardBloc, HpCardState>(
     //   'deve poder mostrar la tarjeta de un personaje que contiene',
     //   build: () =>
