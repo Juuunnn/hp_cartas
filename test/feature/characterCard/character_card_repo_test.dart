@@ -1,17 +1,12 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hp_cartas/domain/character.dart';
 import 'package:hp_cartas/feature/characterCard/character_card_repo.dart';
-
-final elJson = File('test/characters.json').readAsStringSync();
 
 void main() {
   group('character card repo deve', () {
     test('poder obtener los datos de Harry Potter', () {
       final repo = CharacterCardRepoTest();
-      final resultado =
-          repo.getCharacterData(characterName: 'Harry Potter', elJson: elJson);
+      final resultado = repo.getCharacterData(characterName: 'Harry Potter');
       resultado.match((l) {
         assert(false);
       }, (r) {
@@ -38,8 +33,8 @@ void main() {
     // cho chang
     test('poder obtener los datos de Hermione Granger', () {
       final repo = CharacterCardRepoTest();
-      final resultado = repo.getCharacterData(
-          characterName: 'Hermione Granger', elJson: elJson);
+      final resultado =
+          repo.getCharacterData(characterName: 'Hermione Granger');
       resultado.match((l) {
         assert(false);
       }, (r) {
@@ -63,8 +58,8 @@ void main() {
     });
     test('url vacia de imagen hace que el campo sea null', () {
       final repo = CharacterCardRepoTest();
-      final resultado = repo.getCharacterData(
-          characterName: 'Victoire Weasley', elJson: elJson);
+      final resultado =
+          repo.getCharacterData(characterName: 'Victoire Weasley');
       resultado.match((l) {
         assert(false);
       }, (r) {
