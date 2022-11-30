@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:hp_cartas/domain/character.dart';
+import 'package:hp_cartas/domain/problem.dart';
 import 'package:hp_cartas/feature/characterCard/character_card_repo.dart';
 
 final elJson = File('test/characters.json').readAsStringSync();
@@ -194,6 +197,30 @@ void main() {
         assert(false);
       }, (r) {
         expect(r, ['Harry Potter', 'Draco Malfoy']);
+      });
+    });
+    //estas pruebas son considerando la bd real
+    group('datos del json deben cumplir con...', () {
+      test('todos los personajes deben generar un hashcode distinto', () {
+        // TODO: el codigo hash si se esta repitiendo, necesito averiguar por que
+        // parece haber 4 nombres repetidos
+        //necesito averiguar cuales son y si cumplen con las mismas caracteristicas
+        final repo = CharacterCardRepoTest();
+        final dataList = repo.getCharacterNameList(elJson: elJson);
+        dataList.match(
+          (l) {
+            assert(false);
+          },
+          (r) {
+            final result = r.map((e) {
+              return repo
+                  .getCharacterData(characterName: e, elJson: elJson)
+                  .match((l) => left(l), (r) => right(r.name));
+            }).toSet();
+            expect(result.length, 403);
+            expect(false, result.any((element) => element.isLeft()));
+          },
+        );
       });
     });
   });
