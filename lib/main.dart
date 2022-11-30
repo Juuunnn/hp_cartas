@@ -6,11 +6,12 @@ import 'package:hp_cartas/bloc/hp_card_bloc.dart';
 import 'package:hp_cartas/feature/characterCard/character_card_repo.dart';
 import 'package:hp_cartas/feature/characterCard/view/character_card_view.dart';
 import 'package:hp_cartas/feature/characterCard/view/character_list_view.dart';
+import 'package:hp_cartas/feature/characterDataProvider/view/data_provider_error_view.dart';
 import 'package:hp_cartas/genericView/bad_state_view.dart';
 import 'package:hp_cartas/genericView/loading.dart';
 import 'package:hp_cartas/genericView/unexpected_error_view.dart';
 
-const String apiUrl = ' ';
+const String apiUrl = 'test/characters.json';
 
 void main() {
   runApp(const MyApp());
@@ -48,7 +49,10 @@ class Pantalla extends StatelessWidget {
     return BlocBuilder<HpCardBloc, HpCardState>(
       builder: (context, state) {
         if (state is HpCardInitial) {
-          context.read<HpCardBloc>().add(NavegatedToCharacterList());
+          // context.read<HpCardBloc>().add(NavegatedToCharacterList());
+          return const Loading();
+        }
+        if (state is LoadingData) {
           return const Loading();
         }
         if (state is ShowingCharacterCard) {
@@ -71,6 +75,9 @@ class Pantalla extends StatelessWidget {
         }
         if (state is ErrorInesperado) {
           return UnexpectedErrorView(problem: state.problem);
+        }
+        if (state is DataComunicatioError) {
+          return DataProviderErrorView(data: state.parseProblem);
         }
         return const BadStateView();
       },

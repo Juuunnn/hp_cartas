@@ -5,8 +5,8 @@ import 'package:hp_cartas/domain/problem.dart';
 import 'package:hp_cartas/feature/characterDataProvider/component/bad_comunication_component.dart';
 import 'package:hp_cartas/feature/characterDataProvider/component/invalid_data_recived_component.dart';
 
-class DataProviderView extends StatelessWidget {
-  const DataProviderView({super.key, required this.data});
+class DataProviderErrorView extends StatelessWidget {
+  const DataProviderErrorView({super.key, required this.data});
 
   final ProblemDataParse data;
 
