@@ -32,8 +32,9 @@ void main() {
           bloc.add(InputedCharacterCode('289311629'));
         });
       },
+      wait: duration,
       skip: 1,
-      expect: () => [isA<ShowingNewCharacterObtained>()],
+      expect: () => [isA<LoadingData>(), isA<ShowingNewCharacterObtained>()],
     );
     // blocTest<HpCardBloc, HpCardState>(
     //   'deve poder mostrar la tarjeta de un personaje que contiene',

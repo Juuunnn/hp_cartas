@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:hp_cartas/domain/character.dart';
+import 'package:hp_cartas/domain/code_input.dart';
 import 'package:hp_cartas/domain/problem.dart';
 import 'package:hp_cartas/feature/characterCard/character_card_repo.dart';
 import 'package:hp_cartas/feature/characterDataProvider/character_data_provider.dart';
@@ -22,7 +23,24 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
     required this.dataProvider,
     this.daylyCharacterObtained = false,
   }) : super(HpCardInitial()) {
-    on<InputedCharacterCode>((event, emit) => null);
+    on<InputedCharacterCode>((event, emit) {
+      emit(LoadingData());
+      try {
+        final characterObtained = cardRepo.getCharacterCharacterWithCode(
+            characterCode: CodeInput.constructor(event.propCharacter),
+            elJson: rawData);
+        characterObtained.match(
+          (l) {
+            emit(ErrorInesperado(l));
+          },
+          (r) {
+            emit(ShowingNewCharacterObtained(r));
+          },
+        );
+      } catch (e) {
+        emit(ErrorInesperado(UnknownProblem(e.toString())));
+      }
+    });
     on<ObtainedNewCharacter>((event, emit) {
       final fullCharacterList = cardRepo.getCharacterNameList(elJson: rawData);
       fullCharacterList.match((l) {
