@@ -6,36 +6,22 @@ import 'package:hp_cartas/feature/characterCard/character_card_repo.dart';
 
 const String testUrl = 'test/characters.json';
 
-const duration = Duration(milliseconds: 100);
+const duration = Duration(milliseconds: 1000);
 
 void main() {
   group('hp card bloc debe', () {
     blocTest<HpCardBloc, HpCardState>(
       'deve poder mostrar la tarjeta de un personaje que contiene',
-      build: () =>
-          HpCardBloc.tester(apiUrl: testUrl, daylyCharacterObtained: true),
+      build: () => HpCardBloc.tester(apiUrl: testUrl),
       act: (bloc) {
         Future.delayed(duration, () {
-          bloc.add(SelectedCharacterCard(characterName: 'Harry Potter'));
+          bloc.add(SelectedCharacterCard(
+              characterName: bloc.obtainedCharacters.first.name));
         });
       },
       wait: duration,
-      skip: 1,
-      expect: () => [
-        ShowingCharacterCard(HPCharacter.constructor(
-          nameProp: 'Harry Potter',
-          speciesProp: 'human',
-          houseProp: 'Gryffindor',
-          genderProp: 'male',
-          dateOfBirthProp: '31-07-1980',
-          ancestryProp: 'half-blood',
-          patronusProp: 'stag',
-          wandProp: Barita(wood: "holly", core: "phoenix feather", length: 11),
-          hogwartsStudentProp: true,
-          hogwartsStaffProp: false,
-          imageUrl: 'https://hp-api.herokuapp.com/images/harry.jpg',
-        ))
-      ],
+      skip: 2,
+      expect: () => [isA<ShowingCharacterCard>()],
     );
     // blocTest<HpCardBloc, HpCardState>(
     //   'deve poder mostrar la tarjeta de un personaje que contiene',
@@ -66,17 +52,17 @@ void main() {
     // );
     blocTest<HpCardBloc, HpCardState>(
       'deve poder mostrar la lista de personajes despues de mostrar tarjeta ',
-      build: () =>
-          HpCardBloc.tester(apiUrl: testUrl, daylyCharacterObtained: true),
+      build: () => HpCardBloc.tester(apiUrl: testUrl),
       act: (bloc) {
         Future.delayed(duration, () {
-          bloc.add(SelectedCharacterCard(characterName: 'Harry Potter'));
+          bloc.add(SelectedCharacterCard(
+              characterName: bloc.obtainedCharacters.first.name));
           bloc.add(NavegatedToCharacterList());
         });
       },
       wait: duration,
       skip: 2,
-      expect: () => [isA<ShowingCharacterList>()],
+      expect: () => [isA<ShowingCharacterCard>(), isA<ShowingCharacterList>()],
     );
     blocTest<HpCardBloc, HpCardState>(
       'deve desbloquear un nuevo personaje al iniciar',

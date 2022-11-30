@@ -48,13 +48,15 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
       });
     });
     on<SelectedCharacterCard>((event, emit) {
-      final result = cardRepo.getCharacterData(
-          characterName: event.characterName, elJson: rawData);
-      result.match((l) {
-        emit(ErrorInesperado(l));
-      }, ((r) {
-        emit(ShowingCharacterCard(r));
-      }));
+      try {
+        HPCharacter result = obtainedCharacters
+            .firstWhere((element) => element.name == event.characterName);
+        emit(ShowingCharacterCard(result));
+      } catch (e) {
+        emit(ErrorInesperado(UnknownProblem(e.toString())));
+      }
+      // final result = cardRepo.getCharacterData(
+      //     characterName: event.characterName, elJson: rawData);
     });
     on<NavegatedToCharacterList>((event, emit) {
       final result = cardRepo.getCharacterNameList(elJson: rawData);
