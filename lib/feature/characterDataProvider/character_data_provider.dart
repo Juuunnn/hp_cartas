@@ -1,14 +1,3 @@
-// ignore: todo
-//TODO: adminisrar personajes almacenados localmente y los obtenidos de la api
-// states: new character unlocked, getting character,
-//
-//      finished:loading getting character list from api,  bad comunication, bad response format
-
-// finished events: got character, got character list
-// finished screens: character obtained view,
-
-// obtener personaje de bd Local
-
 import 'dart:convert';
 import 'dart:io';
 
