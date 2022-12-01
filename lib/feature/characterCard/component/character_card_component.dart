@@ -4,14 +4,17 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hp_cartas/domain/character.dart';
+import 'package:hp_cartas/domain/spell.dart';
 
-class CharacterCard extends StatelessWidget {
-  const CharacterCard({
+class CharacterCardComponent extends StatelessWidget {
+  const CharacterCardComponent({
     Key? key,
     required this.character,
+    required this.spellList,
   }) : super(key: key);
 
   final HPCharacter character;
+  final List<Spell> spellList;
 
   @override
   Widget build(BuildContext context) {
@@ -25,83 +28,106 @@ class CharacterCard extends StatelessWidget {
         ].contains(key) ||
         value is! String);
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 231, 203, 138),
-              border: Border.all(color: Colors.grey, width: 2),
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(7.0),
-              child: SizedBox(
-                width: 300,
-                child: Column(
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      color: Colors.brown,
-                      child: Center(
-                        child: Text(
-                          character.name,
-                          style: GoogleFonts.aladin(fontSize: 30),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CachedNetworkImage(
-                        imageUrl: character.image ??
-                            'https://via.placeholder.com/728x90.jpeg?text=No+Image+data',
-                        placeholder: (context, url) =>
-                            const CircularProgressIndicator(),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Table(
-                        // defaultColumnWidth: const FlexColumnWidth(100),
-                        border: TableBorder.symmetric(
-                          outside: const BorderSide(color: Colors.black),
-                          inside: const BorderSide(color: Colors.black),
-                        ),
-                        children: [
-                          ...characterMap.entries.map((e) {
-                            return TableRow(children: [
-                              CampoTabla(e.key),
-                              RegistroTabla(e.value),
-                            ]);
-                          }).toList(),
-                          TableRow(children: [
-                            const CampoTabla('hogwartsStaff'),
-                            RegistroTabla(character.hogwartsStaff.toString()),
-                          ]),
-                          TableRow(children: [
-                            const CampoTabla('hogwartsStudent'),
-                            RegistroTabla(character.hogwartsStudent.toString()),
-                          ]),
-                          TableRow(children: [
-                            const CampoTabla('wand'),
-                            WandaInfo(wand: character.wand),
-                          ]),
-                          TableRow(children: [
-                            const CampoTabla('coigo'),
-                            RegistroTabla(character.hashCode.toString()),
-                          ]),
-                        ],
-                      ),
-                    ),
-                  ],
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 231, 203, 138),
+                border: Border.all(color: Colors.grey, width: 2),
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(7.0),
+                child: SizedBox(
+                  width: 300,
+                  child: Column(
+                    children: [
+                      CharacterArea(
+                          character: character, characterMap: characterMap),
+                      SpellArea(spellList: spellList),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
+    );
+  }
+}
+
+class CharacterArea extends StatelessWidget {
+  const CharacterArea({
+    Key? key,
+    required this.character,
+    required this.characterMap,
+  }) : super(key: key);
+
+  final HPCharacter character;
+  final Map<String, dynamic> characterMap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          width: double.infinity,
+          color: Colors.brown,
+          child: Center(
+            child: Text(
+              character.name,
+              style: GoogleFonts.aladin(fontSize: 30),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: CachedNetworkImage(
+            imageUrl: character.image ??
+                'https://via.placeholder.com/728x90.jpeg?text=No+Image+data',
+            placeholder: (context, url) => const CircularProgressIndicator(),
+            errorWidget: (context, url, error) => const Icon(Icons.error),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+          child: Table(
+            // defaultColumnWidth: const FlexColumnWidth(100),
+            border: TableBorder.symmetric(
+              outside: const BorderSide(color: Colors.black),
+              inside: const BorderSide(color: Colors.black),
+            ),
+            children: [
+              ...characterMap.entries.map((e) {
+                return TableRow(children: [
+                  CampoTabla(e.key),
+                  RegistroTabla(e.value),
+                ]);
+              }).toList(),
+              TableRow(children: [
+                const CampoTabla('hogwartsStaff'),
+                RegistroTabla(character.hogwartsStaff.toString()),
+              ]),
+              TableRow(children: [
+                const CampoTabla('hogwartsStudent'),
+                RegistroTabla(character.hogwartsStudent.toString()),
+              ]),
+              TableRow(children: [
+                const CampoTabla('wand'),
+                WandaInfo(wand: character.wand),
+              ]),
+              TableRow(children: [
+                const CampoTabla('coigo'),
+                RegistroTabla(character.hashCode.toString()),
+              ]),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
@@ -169,6 +195,34 @@ class WandaInfo extends StatelessWidget {
         Text(wand!.core),
         Text(wand?.length.toString() ?? 'n/a'),
       ],
+    );
+  }
+}
+
+class SpellArea extends StatelessWidget {
+  const SpellArea({super.key, required this.spellList});
+  final List<Spell> spellList;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Container(
+        color: Colors.white70,
+        child: Table(
+          // defaultColumnWidth: const FlexColumnWidth(100),
+          border: TableBorder.symmetric(
+            outside: const BorderSide(color: Colors.black),
+            inside: const BorderSide(color: Colors.black),
+          ),
+          children: spellList.map((e) {
+            return TableRow(children: [
+              CampoTabla(e.name),
+              RegistroTabla(e.description),
+            ]);
+          }).toList(),
+        ),
+      ),
     );
   }
 }

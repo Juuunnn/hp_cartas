@@ -6,16 +6,16 @@ import 'package:fpdart/fpdart.dart';
 import 'package:hp_cartas/domain/character.dart';
 import 'package:hp_cartas/domain/code_input.dart';
 import 'package:hp_cartas/domain/problem.dart';
-import 'package:hp_cartas/feature/characterCard/character_card_repo.dart';
+import 'package:hp_cartas/feature/characterCard/character_repo.dart';
 
 final elJson = File('test/characters.json').readAsStringSync();
 
 void main() {
   group('character card repo deve', () {
     test('poder obtener los datos de Harry Potter', () {
-      final repo = CharacterCardRepoTest();
-      final resultado =
-          repo.getCharacterData(characterName: 'Harry Potter', elJson: elJson);
+      final repo = CharacterRepoTest();
+      final resultado = repo.getCharacterWithName(
+          characterName: 'Harry Potter', elJson: elJson);
       resultado.match((l) {
         assert(false);
       }, (r) {
@@ -41,8 +41,8 @@ void main() {
     //Minerva McGonagall
     // cho chang
     test('poder obtener los datos de Hermione Granger', () {
-      final repo = CharacterCardRepoTest();
-      final resultado = repo.getCharacterData(
+      final repo = CharacterRepoTest();
+      final resultado = repo.getCharacterWithName(
           characterName: 'Hermione Granger', elJson: elJson);
       resultado.match((l) {
         assert(false);
@@ -66,8 +66,8 @@ void main() {
       });
     });
     test('url vacia de imagen hace que el campo sea null', () {
-      final repo = CharacterCardRepoTest();
-      final resultado = repo.getCharacterData(
+      final repo = CharacterRepoTest();
+      final resultado = repo.getCharacterWithName(
           characterName: 'Victoire Weasley', elJson: elJson);
       resultado.match((l) {
         assert(false);
@@ -203,7 +203,7 @@ void main() {
   });
   group('getCharacterCharacterWithCode debe ', () {
     test('debolver Albert Runcorn con el codigo: 289311629', () {
-      final repo = CharacterCardRepoTest();
+      final repo = CharacterRepoTest();
       final resultado = repo.getCharacterWithCode(
           characterCode: CodeInput.constructor('289311629'), elJson: elJson);
       resultado.match((l) {
@@ -221,7 +221,7 @@ void main() {
       });
     });
     test('debolver error con el codigo: 289311', () {
-      final repo = CharacterCardRepoTest();
+      final repo = CharacterRepoTest();
       final resultado = repo.getCharacterWithCode(
           characterCode: CodeInput.constructor('289311'), elJson: elJson);
       resultado.match((l) {
@@ -234,7 +234,7 @@ void main() {
   //estas pruebas son considerando la bd real
   group('datos del json deben cumplir con...', () {
     test('todos los personajes deben generar un hashcode distinto', () {
-      final repo = CharacterCardRepoTest();
+      final repo = CharacterRepoTest();
       final dataList = repo.getCharacterNameList(elJson: elJson);
       dataList.match(
         (l) {
@@ -243,7 +243,7 @@ void main() {
         (r) {
           final result = r.map((e) {
             return repo
-                .getCharacterData(characterName: e, elJson: elJson)
+                .getCharacterWithName(characterName: e, elJson: elJson)
                 .match((l) => left(l), (r) => right(r.hashCode));
           }).toSet();
           expect(result.length, r.length);

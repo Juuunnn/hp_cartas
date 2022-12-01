@@ -4,17 +4,31 @@ import 'dart:io';
 import 'package:fpdart/fpdart.dart';
 import 'package:hp_cartas/domain/problem.dart';
 
-abstract class CharacterDataProvider {
+abstract class DataProvider {
   // Future<Either<Problem, String>> getFromLocalDB(String file);
-  Future<Either<ProblemDataParse, String>> getFromAPI(String url);
+  Future<Either<ProblemDataParse, String>> getCharacterListFromAPI(String url);
+  Future<Either<ProblemDataParse, String>> getSpellListFromAPI(String url);
 }
 
-class CharacterDataObtainerTest extends CharacterDataProvider {
+class DataProviderTest extends DataProvider {
   @override
-  Future<Either<ProblemDataParse, String>> getFromAPI(String url) async {
+  Future<Either<ProblemDataParse, String>> getCharacterListFromAPI(
+      String url) async {
     late final String elJson;
     try {
-      elJson = await File(url).readAsString();
+      elJson = await File('$url/characters.json').readAsString();
+    } catch (e) {
+      return Future.value(left(BadAPIConection()));
+    }
+    return Future.value(validateData(elJson));
+  }
+
+  @override
+  Future<Either<ProblemDataParse, String>> getSpellListFromAPI(
+      String url) async {
+    late final String elJson;
+    try {
+      elJson = await File('$url/spells.json').readAsString();
     } catch (e) {
       return Future.value(left(BadAPIConection()));
     }

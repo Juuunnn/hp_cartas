@@ -31,3 +31,7 @@ abstract class InvalidCode extends Problem {}
 class EmptyInput extends InvalidCode {}
 
 class IsNotNumber extends InvalidCode {}
+
+abstract class ProblemSpellList extends Problem {}
+
+class IncorrectSpellLength extends ProblemSpellList {}

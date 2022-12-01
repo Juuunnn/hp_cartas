@@ -24,7 +24,7 @@ class ShowingNewCharacterObtained extends HpCardState {
 }
 
 class ShowingCharacterCard extends HpCardState {
-  final HPCharacter character;
+  final List<CharacterCard> character;
 
   ShowingCharacterCard(this.character);
 
@@ -34,7 +34,7 @@ class ShowingCharacterCard extends HpCardState {
 
 class ShowingCharacterList extends HpCardState {
   final List<String> characterList;
-  final List<String> obtainedCharacters;
+  final Map<String, num> obtainedCharacters;
 
   ShowingCharacterList(this.characterList, this.obtainedCharacters);
   @override
