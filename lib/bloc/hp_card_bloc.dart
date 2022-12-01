@@ -20,7 +20,7 @@ part 'hp_card_state.dart';
 class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
   final CharacterRepo cardRepo;
   final SpellRepo spellRepo;
-  final DataProvider dataProvider;
+  final ApiDataProvider dataProvider;
   late final String rawCharacterData;
   late final String rawSpellData;
   Map<String, List<CharacterCard>> obtainedCharacters = {};
@@ -155,7 +155,7 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
     required String apiUrl,
     required CharacterRepo cardRepo,
     required SpellRepo spellRepo,
-    required DataProvider dataProvider,
+    required ApiDataProvider dataProvider,
   }) {
     HpCardBloc bloc = HpCardBloc._(
       cardRepo: cardRepo,
@@ -173,7 +173,7 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
     HpCardBloc bloc = HpCardBloc._(
       cardRepo: CharacterRepoTest(),
       spellRepo: SpellRepoTest(),
-      dataProvider: DataProviderTest(),
+      dataProvider: ApiDataProviderTest(),
       daylyCharacterObtained: daylyCharacterObtained,
     );
     bloc.add(StartedLoadingData(apiUrl: apiUrl));

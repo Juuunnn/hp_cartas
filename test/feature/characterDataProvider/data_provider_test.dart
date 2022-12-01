@@ -11,7 +11,7 @@ void main() {
   group('character data obtainer getCharacterListFromAPI debe ', (() {
     test('tener largo de 403', () async {
       final obtainer =
-          await DataProviderTest().getCharacterListFromAPI(testUrl);
+          await ApiDataProviderTest().getCharacterListFromAPI(testUrl);
       obtainer.match((l) {
         assert(false);
       }, (r) {
@@ -20,7 +20,7 @@ void main() {
       });
     });
     test('tirar error de malos datos ', () async {
-      final obtainer = await DataProviderTest().getCharacterListFromAPI(
+      final obtainer = await ApiDataProviderTest().getCharacterListFromAPI(
           'test/feature/characterDataProvider/badJson.txt');
       obtainer.match((l) {
         expect(l, isA<InvalidDataRecived>());
@@ -29,7 +29,8 @@ void main() {
       });
     });
     test('tirar error de mala coneccion', () async {
-      final obtainer = await DataProviderTest().getCharacterListFromAPI('fdsa');
+      final obtainer =
+          await ApiDataProviderTest().getCharacterListFromAPI('fdsa');
       obtainer.match((l) {
         expect(l, isA<BadAPIConection>());
       }, (r) {
@@ -51,7 +52,7 @@ void main() {
   group('character data obtainer getSpellListFromAPI debe ', (() {
     test('tener largo de 77', () async {
       final obtainer =
-          await DataProviderTest().getSpellListFromAPI(spellTestUrl);
+          await ApiDataProviderTest().getSpellListFromAPI(spellTestUrl);
       obtainer.match((l) {
         assert(false);
       }, (r) {
@@ -60,7 +61,7 @@ void main() {
       });
     });
     test('tirar error de malos datos ', () async {
-      final obtainer = await DataProviderTest().getCharacterListFromAPI(
+      final obtainer = await ApiDataProviderTest().getCharacterListFromAPI(
           'test/feature/characterDataProvider/badJson.txt');
       obtainer.match((l) {
         expect(l, isA<InvalidDataRecived>());
@@ -69,7 +70,8 @@ void main() {
       });
     });
     test('tirar error de mala coneccion', () async {
-      final obtainer = await DataProviderTest().getCharacterListFromAPI('fdsa');
+      final obtainer =
+          await ApiDataProviderTest().getCharacterListFromAPI('fdsa');
       obtainer.match((l) {
         expect(l, isA<BadAPIConection>());
       }, (r) {

@@ -4,13 +4,13 @@ import 'dart:io';
 import 'package:fpdart/fpdart.dart';
 import 'package:hp_cartas/domain/problem.dart';
 
-abstract class DataProvider {
+abstract class ApiDataProvider {
   // Future<Either<Problem, String>> getFromLocalDB(String file);
   Future<Either<ProblemDataParse, String>> getCharacterListFromAPI(String url);
   Future<Either<ProblemDataParse, String>> getSpellListFromAPI(String url);
 }
 
-class DataProviderTest extends DataProvider {
+class ApiDataProviderTest extends ApiDataProvider {
   @override
   Future<Either<ProblemDataParse, String>> getCharacterListFromAPI(
       String url) async {
