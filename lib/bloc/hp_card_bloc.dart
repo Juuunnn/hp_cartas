@@ -44,8 +44,8 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
           }
         },
         (r) {
-          final characterObtained = cardRepo.getCharacterCharacterWithCode(
-              characterCode: r, elJson: rawData);
+          final characterObtained =
+              cardRepo.getCharacterWithCode(characterCode: r, elJson: rawData);
           characterObtained.match(
             (l) {
               emit(ErrorInesperado(l));

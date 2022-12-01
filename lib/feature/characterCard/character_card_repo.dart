@@ -10,7 +10,7 @@ abstract class CharacterCardRepo {
   Either<Problem, HPCharacter> getCharacterData(
       {required String characterName, required String elJson});
   Either<Problem, List<String>> getCharacterNameList({required String elJson});
-  Either<Problem, HPCharacter?> getCharacterCharacterWithCode(
+  Either<Problem, HPCharacter?> getCharacterWithCode(
       {required CodeInput characterCode, required String elJson});
 }
 
@@ -27,7 +27,7 @@ class CharacterCardRepoTest extends CharacterCardRepo {
   }
 
   @override
-  Either<Problem, HPCharacter?> getCharacterCharacterWithCode(
+  Either<Problem, HPCharacter?> getCharacterWithCode(
       {required CodeInput characterCode, required String elJson}) {
     return getListData(elJson).match((l) => left(l), (r) {
       final resultado = r

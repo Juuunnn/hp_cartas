@@ -204,7 +204,7 @@ void main() {
   group('getCharacterCharacterWithCode debe ', () {
     test('debolver Albert Runcorn con el codigo: 289311629', () {
       final repo = CharacterCardRepoTest();
-      final resultado = repo.getCharacterCharacterWithCode(
+      final resultado = repo.getCharacterWithCode(
           characterCode: CodeInput.constructor('289311629'), elJson: elJson);
       resultado.match((l) {
         assert(false);
@@ -222,12 +222,12 @@ void main() {
     });
     test('debolver error con el codigo: 289311', () {
       final repo = CharacterCardRepoTest();
-      final resultado = repo.getCharacterCharacterWithCode(
+      final resultado = repo.getCharacterWithCode(
           characterCode: CodeInput.constructor('289311'), elJson: elJson);
       resultado.match((l) {
-        expect(l, isA<CharacterCodeNotFound>());
-      }, (r) {
         assert(false);
+      }, (r) {
+        expect(r, equals(null));
       });
     });
   });
