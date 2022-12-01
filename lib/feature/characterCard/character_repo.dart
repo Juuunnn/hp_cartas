@@ -6,15 +6,15 @@ import 'package:hp_cartas/domain/character.dart';
 import 'package:hp_cartas/domain/code_input.dart';
 import 'package:hp_cartas/domain/problem.dart';
 
-abstract class CharacterCardRepo {
+abstract class CharacterRepo {
   Either<Problem, HPCharacter> getCharacterData(
       {required String characterName, required String elJson});
-  Either<Problem, List<String>> getCharacterNameList({required String elJson});
+  Either<Problem, List<String>> getCharacterWithName({required String elJson});
   Either<Problem, HPCharacter?> getCharacterWithCode(
       {required CodeInput characterCode, required String elJson});
 }
 
-class CharacterCardRepoTest extends CharacterCardRepo {
+class CharacterRepoTest extends CharacterRepo {
   @override
   Either<Problem, HPCharacter> getCharacterData(
       {required String characterName, required String elJson}) {
@@ -22,7 +22,7 @@ class CharacterCardRepoTest extends CharacterCardRepo {
   }
 
   @override
-  Either<Problem, List<String>> getCharacterNameList({required String elJson}) {
+  Either<Problem, List<String>> getCharacterWithName({required String elJson}) {
     return getListData(elJson);
   }
 

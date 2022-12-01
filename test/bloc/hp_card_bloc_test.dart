@@ -2,7 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hp_cartas/bloc/hp_card_bloc.dart';
 import 'package:hp_cartas/domain/character.dart';
-import 'package:hp_cartas/feature/characterCard/character_card_repo.dart';
+import 'package:hp_cartas/feature/characterCard/character_repo.dart';
 
 const String testUrl = 'test/characters.json';
 

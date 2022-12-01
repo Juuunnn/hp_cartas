@@ -4,7 +4,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:hp_cartas/domain/character.dart';
 import 'package:hp_cartas/domain/code_input.dart';
 import 'package:hp_cartas/domain/problem.dart';
-import 'package:hp_cartas/feature/characterCard/character_card_repo.dart';
+import 'package:hp_cartas/feature/characterCard/character_repo.dart';
 import 'package:hp_cartas/feature/characterDataProvider/character_data_provider.dart';
 import 'package:meta/meta.dart';
 
@@ -12,7 +12,7 @@ part 'hp_card_event.dart';
 part 'hp_card_state.dart';
 
 class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
-  final CharacterCardRepo cardRepo;
+  final CharacterRepo cardRepo;
   final CharacterDataProvider dataProvider;
   late final String rawData;
   List<HPCharacter> obtainedCharacters = [];
@@ -63,7 +63,7 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
       );
     });
     on<ObtainedNewCharacter>((event, emit) {
-      final fullCharacterList = cardRepo.getCharacterNameList(elJson: rawData);
+      final fullCharacterList = cardRepo.getCharacterWithName(elJson: rawData);
       fullCharacterList.match((l) {
         emit(ErrorInesperado(l));
       }, (r) {
@@ -99,7 +99,7 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
       //     characterName: event.characterName, elJson: rawData);
     });
     on<NavegatedToCharacterList>((event, emit) {
-      final result = cardRepo.getCharacterNameList(elJson: rawData);
+      final result = cardRepo.getCharacterWithName(elJson: rawData);
       result.match((l) {
         emit(ErrorInesperado(l));
       }, ((r) {
@@ -115,7 +115,7 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
 
   factory HpCardBloc.constructor({
     required String apiUrl,
-    required CharacterCardRepo cardRepo,
+    required CharacterRepo cardRepo,
     required CharacterDataProvider dataProvider,
   }) {
     HpCardBloc bloc =
@@ -127,7 +127,7 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
   factory HpCardBloc.tester(
       {required String apiUrl, bool daylyCharacterObtained = false}) {
     HpCardBloc bloc = HpCardBloc._(
-        cardRepo: CharacterCardRepoTest(),
+        cardRepo: CharacterRepoTest(),
         dataProvider: CharacterDataObtainerTest(),
         daylyCharacterObtained: daylyCharacterObtained);
     bloc.add(StartedLoadingData(apiUrl: apiUrl));
