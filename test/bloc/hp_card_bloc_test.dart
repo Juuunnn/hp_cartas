@@ -16,8 +16,8 @@ void main() {
       act: (bloc) {
         Future.delayed(duration, () {
           bloc.add(SelectedCharacterCard(
-              characterName:
-                  bloc.obtainedCharacters.entries.first.value.first.name));
+              characterName: bloc.obtainedCharacters.entries.first.value.first
+                  .character.name));
         });
       },
       wait: duration,

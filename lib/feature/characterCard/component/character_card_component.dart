@@ -4,14 +4,17 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hp_cartas/domain/character.dart';
+import 'package:hp_cartas/domain/spell.dart';
 
 class CharacterCardComponent extends StatelessWidget {
   const CharacterCardComponent({
     Key? key,
     required this.character,
+    required this.spellList,
   }) : super(key: key);
 
   final HPCharacter character;
+  final List<Spell> spellList;
 
   @override
   Widget build(BuildContext context) {
