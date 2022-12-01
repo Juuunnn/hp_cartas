@@ -12,7 +12,7 @@ import 'package:hp_cartas/domain/code_input.dart';
 import 'package:hp_cartas/domain/problem.dart';
 import 'package:hp_cartas/domain/spell.dart';
 import 'package:hp_cartas/feature/characterCard/character_repo.dart';
-import 'package:hp_cartas/feature/characterDataProvider/data_provider.dart';
+import 'package:hp_cartas/feature/characterDataProvider/api_data_provider.dart';
 
 part 'hp_card_event.dart';
 part 'hp_card_state.dart';
@@ -87,10 +87,8 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
       });
     });
     on<StartedLoadingData>((event, emit) async {
-      final characterDataRecived =
-          await dataProvider.getCharacterListFromAPI(event.apiUrl);
-      final spellDataRecived =
-          await dataProvider.getSpellListFromAPI(event.apiUrl);
+      final characterDataRecived = await dataProvider.getCharacterListFromAPI();
+      final spellDataRecived = await dataProvider.getSpellListFromAPI();
       characterDataRecived.match((l) {
         emit(DataComunicatioError(l));
       }, (r1) {
@@ -173,7 +171,7 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
     HpCardBloc bloc = HpCardBloc._(
       cardRepo: CharacterRepoTest(),
       spellRepo: SpellRepoTest(),
-      dataProvider: ApiDataProviderTest(),
+      dataProvider: ApiDataProviderTest(apiUrl),
       daylyCharacterObtained: daylyCharacterObtained,
     );
     bloc.add(StartedLoadingData(apiUrl: apiUrl));

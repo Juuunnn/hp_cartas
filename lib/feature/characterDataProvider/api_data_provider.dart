@@ -5,15 +5,19 @@ import 'package:fpdart/fpdart.dart';
 import 'package:hp_cartas/domain/problem.dart';
 
 abstract class ApiDataProvider {
+  final String url;
+
+  ApiDataProvider(this.url);
   // Future<Either<Problem, String>> getFromLocalDB(String file);
-  Future<Either<ProblemDataParse, String>> getCharacterListFromAPI(String url);
-  Future<Either<ProblemDataParse, String>> getSpellListFromAPI(String url);
+  Future<Either<ProblemDataParse, String>> getCharacterListFromAPI();
+  Future<Either<ProblemDataParse, String>> getSpellListFromAPI();
 }
 
 class ApiDataProviderTest extends ApiDataProvider {
+  ApiDataProviderTest(super.url);
+
   @override
-  Future<Either<ProblemDataParse, String>> getCharacterListFromAPI(
-      String url) async {
+  Future<Either<ProblemDataParse, String>> getCharacterListFromAPI() async {
     late final String elJson;
     try {
       elJson = await File('$url/characters.json').readAsString();
@@ -24,8 +28,7 @@ class ApiDataProviderTest extends ApiDataProvider {
   }
 
   @override
-  Future<Either<ProblemDataParse, String>> getSpellListFromAPI(
-      String url) async {
+  Future<Either<ProblemDataParse, String>> getSpellListFromAPI() async {
     late final String elJson;
     try {
       elJson = await File('$url/spells.json').readAsString();
