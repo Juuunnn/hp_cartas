@@ -88,6 +88,10 @@ class CharacterCard extends StatelessWidget {
                             const CampoTabla('wand'),
                             WandaInfo(wand: character.wand),
                           ]),
+                          TableRow(children: [
+                            const CampoTabla('coigo'),
+                            RegistroTabla(character.hashCode.toString()),
+                          ]),
                         ],
                       ),
                     ),

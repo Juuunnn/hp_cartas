@@ -21,3 +21,17 @@ class SelectedCharacterCard extends HpCardEvent {
 }
 
 class NavegatedToCharacterList extends HpCardEvent {}
+
+class StartedLoadingData extends HpCardEvent {
+  final String apiUrl;
+
+  StartedLoadingData({required this.apiUrl});
+}
+
+class ObtainedNewCharacter extends HpCardEvent {}
+
+class InputedCharacterCode extends HpCardEvent {
+  final String propCharacter;
+
+  InputedCharacterCode(this.propCharacter);
+}

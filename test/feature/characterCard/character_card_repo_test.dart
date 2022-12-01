@@ -1,12 +1,21 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:hp_cartas/domain/character.dart';
+import 'package:hp_cartas/domain/code_input.dart';
+import 'package:hp_cartas/domain/problem.dart';
 import 'package:hp_cartas/feature/characterCard/character_card_repo.dart';
+
+final elJson = File('test/characters.json').readAsStringSync();
 
 void main() {
   group('character card repo deve', () {
     test('poder obtener los datos de Harry Potter', () {
       final repo = CharacterCardRepoTest();
-      final resultado = repo.getCharacterData(characterName: 'Harry Potter');
+      final resultado =
+          repo.getCharacterData(characterName: 'Harry Potter', elJson: elJson);
       resultado.match((l) {
         assert(false);
       }, (r) {
@@ -33,8 +42,8 @@ void main() {
     // cho chang
     test('poder obtener los datos de Hermione Granger', () {
       final repo = CharacterCardRepoTest();
-      final resultado =
-          repo.getCharacterData(characterName: 'Hermione Granger');
+      final resultado = repo.getCharacterData(
+          characterName: 'Hermione Granger', elJson: elJson);
       resultado.match((l) {
         assert(false);
       }, (r) {
@@ -58,8 +67,8 @@ void main() {
     });
     test('url vacia de imagen hace que el campo sea null', () {
       final repo = CharacterCardRepoTest();
-      final resultado =
-          repo.getCharacterData(characterName: 'Victoire Weasley');
+      final resultado = repo.getCharacterData(
+          characterName: 'Victoire Weasley', elJson: elJson);
       resultado.match((l) {
         assert(false);
       }, (r) {
@@ -190,6 +199,60 @@ void main() {
       }, (r) {
         expect(r, ['Harry Potter', 'Draco Malfoy']);
       });
+    });
+  });
+  group('getCharacterCharacterWithCode debe ', () {
+    test('debolver Albert Runcorn con el codigo: 289311629', () {
+      final repo = CharacterCardRepoTest();
+      final resultado = repo.getCharacterWithCode(
+          characterCode: CodeInput.constructor('289311629'), elJson: elJson);
+      resultado.match((l) {
+        assert(false);
+      }, (r) {
+        expect(
+            r,
+            HPCharacter.constructor(
+                nameProp: 'Albert Runcorn',
+                speciesProp: 'human',
+                genderProp: 'male',
+                hogwartsStudentProp: false,
+                hogwartsStaffProp: false,
+                wandProp: Barita.vacia()));
+      });
+    });
+    test('debolver error con el codigo: 289311', () {
+      final repo = CharacterCardRepoTest();
+      final resultado = repo.getCharacterWithCode(
+          characterCode: CodeInput.constructor('289311'), elJson: elJson);
+      resultado.match((l) {
+        assert(false);
+      }, (r) {
+        expect(r, equals(null));
+      });
+    });
+  });
+  //estas pruebas son considerando la bd real
+  group('datos del json deben cumplir con...', () {
+    test('todos los personajes deben generar un hashcode distinto', () {
+      // TODO: el codigo hash si se esta repitiendo, necesito averiguar por que
+      // parece haber 4 nombres repetidos
+      //necesito averiguar cuales son y si cumplen con las mismas caracteristicas
+      final repo = CharacterCardRepoTest();
+      final dataList = repo.getCharacterNameList(elJson: elJson);
+      dataList.match(
+        (l) {
+          assert(false);
+        },
+        (r) {
+          final result = r.map((e) {
+            return repo
+                .getCharacterData(characterName: e, elJson: elJson)
+                .match((l) => left(l), (r) => right(r.hashCode));
+          }).toSet();
+          expect(result.length, r.length);
+          expect(false, result.any((element) => element.isLeft()));
+        },
+      );
     });
   });
 }
