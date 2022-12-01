@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:hp_cartas/domain/character.dart';
+import 'package:hp_cartas/domain/code_input.dart';
 import 'package:hp_cartas/domain/problem.dart';
 import 'package:hp_cartas/feature/characterCard/character_card_repo.dart';
 import 'package:hp_cartas/feature/characterDataProvider/character_data_provider.dart';
@@ -22,6 +23,45 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
     required this.dataProvider,
     this.daylyCharacterObtained = false,
   }) : super(HpCardInitial()) {
+    on<InputedCharacterCode>((event, emit) {
+      emit(LoadingData());
+      Either<Problem, CodeInput> codigo() {
+        try {
+          return right(CodeInput.constructor(event.propCharacter));
+        } on InvalidCode catch (e) {
+          return left(e);
+        } catch (e) {
+          return left(UnknownProblem(e.toString()));
+        }
+      }
+
+      codigo().match(
+        (l) {
+          if (l is InvalidCode) {
+            emit(BadCodeInput(l));
+          } else {
+            emit(ErrorInesperado(l));
+          }
+        },
+        (r) {
+          final characterObtained =
+              cardRepo.getCharacterWithCode(characterCode: r, elJson: rawData);
+          characterObtained.match(
+            (l) {
+              emit(ErrorInesperado(l));
+            },
+            (r) {
+              if (r == null) {
+                emit(NoMatchForCharacterCode());
+              } else {
+                obtainedCharacters.add(r);
+                emit(ShowingNewCharacterObtained(r));
+              }
+            },
+          );
+        },
+      );
+    });
     on<ObtainedNewCharacter>((event, emit) {
       final fullCharacterList = cardRepo.getCharacterNameList(elJson: rawData);
       fullCharacterList.match((l) {

@@ -15,8 +15,8 @@ class CharacterListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(children: [
       CharacterCounter(
-          totalCharacters: characterList.length,
-          currentCharacters: obtainedCharacters.length),
+          totalCharacters: characterList.toSet().length,
+          currentCharacters: obtainedCharacters.toSet().length),
       SingleChildScrollView(
         child: CharacterList(
           fullCharacterList: characterList,

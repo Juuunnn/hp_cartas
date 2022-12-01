@@ -25,3 +25,9 @@ abstract class ProblemDataParse extends Problem {}
 class InvalidDataRecived extends ProblemDataParse {}
 
 class BadAPIConection extends ProblemDataParse {}
+
+abstract class InvalidCode extends Problem {}
+
+class EmptyInput extends InvalidCode {}
+
+class IsNotNumber extends InvalidCode {}

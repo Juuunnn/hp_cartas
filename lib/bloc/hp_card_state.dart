@@ -60,3 +60,19 @@ class DataComunicatioError extends EstadoProblemaEsperado {
   @override
   List<Object?> get props => [parseProblem];
 }
+
+class BadCodeInput extends EstadoProblemaEsperado {
+  final InvalidCode invalidCode;
+
+  BadCodeInput(this.invalidCode);
+
+  @override
+  List<Object?> get props => [invalidCode];
+}
+
+abstract class UserInteraction extends HpCardState {}
+
+class NoMatchForCharacterCode extends UserInteraction {
+  @override
+  List<Object?> get props => [];
+}
