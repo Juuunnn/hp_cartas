@@ -4,7 +4,7 @@ import 'package:hp_cartas/bloc/hp_card_bloc.dart';
 import 'package:hp_cartas/domain/character.dart';
 import 'package:hp_cartas/feature/characterCard/character_repo.dart';
 
-const String testUrl = 'test/characters.json';
+const String testUrl = 'test';
 
 const duration = Duration(milliseconds: 300);
 
@@ -16,8 +16,8 @@ void main() {
       act: (bloc) {
         Future.delayed(duration, () {
           bloc.add(SelectedCharacterCard(
-              characterName:
-                  bloc.obtainedCharacters.entries.first.value.first.name));
+              characterName: bloc.obtainedCharacters.entries.first.value.first
+                  .character.name));
         });
       },
       wait: duration,

@@ -4,13 +4,6 @@ import 'dart:io';
 
 import 'package:hp_cartas/domain/problem.dart';
 
-// TODO: 6. tener repeticiones del mismo personaje
-// 	mostrar que es un personaje repetidos
-
-// TODO: 7. cada personaje desbloqueado tendra 3 magias aleatorias
-// 	mostrar la magia relacionado al personaje
-// >		al generarce un personaje, este recivira 3 magias aleatoriamente
-
 class HPCharacter {
   final String name;
   final String species;
