@@ -57,12 +57,20 @@ void main() {
       act: (bloc) {
         Future.delayed(duration, () {
           bloc.add(InputedCharacterCode('289311629'));
+          bloc.add(NavegatedToCharacterList());
+          bloc.add(InputedCharacterCode('289311629'));
         });
       },
       wait: duration,
-      verify: (bloc) => bloc.obtainedCharacters['Albert Runcorn']!.length == 2,
-      skip: 2,
-      // expect: () => [isA<LoadingData>(), isA<ShowingNewCharacterObtained>()],
+      verify: (bloc) => bloc.obtainedCharacters['Albert Runcorn']!.length == 4,
+      skip: 1,
+      expect: () => [
+        isA<LoadingData>(),
+        isA<ShowingNewCharacterObtained>(),
+        isA<ShowingCharacterList>(),
+        isA<LoadingData>(),
+        isA<ShowingNewCharacterObtained>(),
+      ],
     );
     blocTest<HpCardBloc, HpCardState>(
       'deve tirar error cuando el codigo es malo',
