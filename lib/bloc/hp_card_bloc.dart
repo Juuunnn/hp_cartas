@@ -35,25 +35,32 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
         }
       }
 
-      codigo().match((l) {
-        if (l is InvalidCode) {
-          emit(BadCodeInput(l));
-        } else {
-          emit(ErrorInesperado(l));
-        }
-      }, (r) {
-        final characterObtained = cardRepo.getCharacterCharacterWithCode(
-            characterCode: r, elJson: rawData);
-        characterObtained.match(
-          (l) {
-            emit(NoMatchForCharacterCode());
-          },
-          (r) {
-            obtainedCharacters.add(r);
-            emit(ShowingNewCharacterObtained(r));
-          },
-        );
-      });
+      codigo().match(
+        (l) {
+          if (l is InvalidCode) {
+            emit(BadCodeInput(l));
+          } else {
+            emit(ErrorInesperado(l));
+          }
+        },
+        (r) {
+          final characterObtained = cardRepo.getCharacterCharacterWithCode(
+              characterCode: r, elJson: rawData);
+          characterObtained.match(
+            (l) {
+              emit(ErrorInesperado(l));
+            },
+            (r) {
+              if (r == null) {
+                emit(NoMatchForCharacterCode());
+              } else {
+                obtainedCharacters.add(r);
+                emit(ShowingNewCharacterObtained(r));
+              }
+            },
+          );
+        },
+      );
     });
     on<ObtainedNewCharacter>((event, emit) {
       final fullCharacterList = cardRepo.getCharacterNameList(elJson: rawData);

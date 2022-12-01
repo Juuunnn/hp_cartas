@@ -10,7 +10,7 @@ abstract class CharacterCardRepo {
   Either<Problem, HPCharacter> getCharacterData(
       {required String characterName, required String elJson});
   Either<Problem, List<String>> getCharacterNameList({required String elJson});
-  Either<Problem, HPCharacter> getCharacterCharacterWithCode(
+  Either<Problem, HPCharacter?> getCharacterCharacterWithCode(
       {required CodeInput characterCode, required String elJson});
 }
 
@@ -27,7 +27,7 @@ class CharacterCardRepoTest extends CharacterCardRepo {
   }
 
   @override
-  Either<Problem, HPCharacter> getCharacterCharacterWithCode(
+  Either<Problem, HPCharacter?> getCharacterCharacterWithCode(
       {required CodeInput characterCode, required String elJson}) {
     return getListData(elJson).match((l) => left(l), (r) {
       final resultado = r
@@ -37,12 +37,15 @@ class CharacterCardRepoTest extends CharacterCardRepo {
                 (r) => right(r),
               ))
           .toList();
-      final personaje = resultado.firstWhere(
-          (element) =>
-              element.getRight().toNullable().hashCode.toString() ==
-              characterCode.searchCode,
-          orElse: () => left(CharacterCodeNotFound()));
-      return personaje.match((l) => left(l), (r) => right(r));
+      try {
+        final personaje = resultado.firstWhere(
+            (Either<Problem, HPCharacter> element) =>
+                element.getRight().toNullable().hashCode.toString() ==
+                characterCode.searchCode);
+        return personaje.match((l) => left(l), (r) => right(r));
+      } catch (e) {
+        return right(null);
+      }
     });
   }
 }
