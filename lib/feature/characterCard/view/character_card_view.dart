@@ -11,13 +11,19 @@ import '../component/return_button_component.dart';
 class CharacterCardView extends StatelessWidget {
   const CharacterCardView(
       {super.key, required this.character, required this.onReturn});
-  final HPCharacter character;
+  final List<HPCharacter> character;
   final Function() onReturn;
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
       SingleChildScrollView(
-          child: CharacterCardComponent(character: character)),
+          child: Column(
+        children: character
+            .map(
+              (e) => CharacterCardComponent(character: e),
+            )
+            .toList(),
+      )),
       ReturnButton(onReturn: onReturn),
     ]);
   }

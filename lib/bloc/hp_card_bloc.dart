@@ -15,7 +15,7 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
   final CharacterRepo cardRepo;
   final CharacterDataProvider dataProvider;
   late final String rawData;
-  List<HPCharacter> obtainedCharacters = [];
+  Map<String, List<HPCharacter>> obtainedCharacters = {};
   bool daylyCharacterObtained;
 
   HpCardBloc._({
@@ -54,7 +54,10 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
               if (r == null) {
                 emit(NoMatchForCharacterCode());
               } else {
-                obtainedCharacters.add(r);
+                if (!obtainedCharacters.containsKey(r.name)) {
+                  obtainedCharacters[r.name] = [];
+                }
+                obtainedCharacters[r.name]!.add(r);
                 emit(ShowingNewCharacterObtained(r));
               }
             },
@@ -73,7 +76,10 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
         newCharacter.match((l) {
           emit(ErrorInesperado(l));
         }, (r) {
-          obtainedCharacters.add(r);
+          if (!obtainedCharacters.containsKey(r.name)) {
+            obtainedCharacters[r.name] = [];
+          }
+          obtainedCharacters[r.name]!.add(r);
           emit(ShowingNewCharacterObtained(r));
         });
       });
@@ -88,12 +94,12 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
       });
     });
     on<SelectedCharacterCard>((event, emit) {
-      try {
-        HPCharacter result = obtainedCharacters
-            .firstWhere((element) => element.name == event.characterName);
+      List<HPCharacter>? result = obtainedCharacters[event.characterName];
+      if (result == null) {
+        emit(ErrorInesperado(
+            UnknownProblem('error buscando el personaje localmente')));
+      } else {
         emit(ShowingCharacterCard(result));
-      } catch (e) {
-        emit(ErrorInesperado(UnknownProblem(e.toString())));
       }
       // final result = cardRepo.getCharacterData(
       //     characterName: event.characterName, elJson: rawData);
@@ -107,8 +113,7 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
           daylyCharacterObtained = true;
           add(ObtainedNewCharacter());
         }
-        emit(ShowingCharacterList(
-            r, obtainedCharacters.map((e) => e.name).toList()));
+        emit(ShowingCharacterList(r, obtainedCharacters.keys.toList()));
       }));
     });
   }

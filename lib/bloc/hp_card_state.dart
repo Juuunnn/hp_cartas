@@ -24,7 +24,7 @@ class ShowingNewCharacterObtained extends HpCardState {
 }
 
 class ShowingCharacterCard extends HpCardState {
-  final HPCharacter character;
+  final List<HPCharacter> character;
 
   ShowingCharacterCard(this.character);
 
