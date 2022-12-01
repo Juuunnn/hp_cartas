@@ -54,11 +54,7 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
               if (r == null) {
                 emit(NoMatchForCharacterCode());
               } else {
-                if (!obtainedCharacters.containsKey(r.name)) {
-                  obtainedCharacters[r.name] = [];
-                }
-                obtainedCharacters[r.name]!.add(r);
-                emit(ShowingNewCharacterObtained(r));
+                obtainedNewCharacter(r, emit);
               }
             },
           );
@@ -76,11 +72,7 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
         newCharacter.match((l) {
           emit(ErrorInesperado(l));
         }, (r) {
-          if (!obtainedCharacters.containsKey(r.name)) {
-            obtainedCharacters[r.name] = [];
-          }
-          obtainedCharacters[r.name]!.add(r);
-          emit(ShowingNewCharacterObtained(r));
+          obtainedNewCharacter(r, emit);
         });
       });
     });
@@ -119,6 +111,14 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
                 .map((key, value) => MapEntry(key, value.length))));
       }));
     });
+  }
+
+  void obtainedNewCharacter(HPCharacter r, Emitter<HpCardState> emit) {
+    if (!obtainedCharacters.containsKey(r.name)) {
+      obtainedCharacters[r.name] = [];
+    }
+    obtainedCharacters[r.name]!.add(r);
+    emit(ShowingNewCharacterObtained(r));
   }
 
   factory HpCardBloc.constructor({
