@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hp_cartas/domain/character.dart';
 
-class CharacterCard extends StatelessWidget {
-  const CharacterCard({
+class CharacterCardComponent extends StatelessWidget {
+  const CharacterCardComponent({
     Key? key,
     required this.character,
   }) : super(key: key);
