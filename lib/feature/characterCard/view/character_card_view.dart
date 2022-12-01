@@ -18,15 +18,18 @@ class CharacterCardView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(children: [
       SingleChildScrollView(
-          child: Column(
-        children: character
-            .map(
-              (e) => CharacterCardComponent(
-                character: e.character,
-                spellList: e.spells,
-              ),
-            )
-            .toList(),
+          child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: character
+              .map(
+                (e) => CharacterCardComponent(
+                  character: e.character,
+                  spellList: e.spells,
+                ),
+              )
+              .toList(),
+        ),
       )),
       ReturnButton(onReturn: onReturn),
     ]);
