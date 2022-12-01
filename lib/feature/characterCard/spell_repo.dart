@@ -35,8 +35,6 @@ la lista de magia relacionada a un personaje debe ser especificamente 3 de largo
 
 al hacer click en el personaje, que muestre  todas las versiones obtenidas
 
-a lado del personaje obtenido que aparesca cuantas versiones del personaje se tienen
-
   Cambiar que cada repositorio se comunique con la direccion de la api que le corresponde
     obtener datos de un personaje sea de la direccion especifica de la api
     lista de nombres de la general
