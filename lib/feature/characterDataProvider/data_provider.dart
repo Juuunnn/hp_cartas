@@ -24,9 +24,15 @@ class CharacterDataObtainerTest extends DataProvider {
   }
 
   @override
-  Future<Either<ProblemDataParse, String>> getSpellListFromAPI(String url) {
-    // TODO: implement getSpellListFromAPI
-    throw UnimplementedError();
+  Future<Either<ProblemDataParse, String>> getSpellListFromAPI(
+      String url) async {
+    late final String elJson;
+    try {
+      elJson = await File(url).readAsString();
+    } catch (e) {
+      return Future.value(left(BadAPIConection()));
+    }
+    return Future.value(validateData(elJson));
   }
 
   // @override

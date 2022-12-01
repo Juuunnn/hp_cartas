@@ -51,14 +51,14 @@ void main() {
   //   });
   // }));
   group('character data obtainer getSpellListFromAPI debe ', (() {
-    test('tener largo de 403', () async {
+    test('tener largo de 77', () async {
       final obtainer =
           await CharacterDataObtainerTest().getSpellListFromAPI(spellTestUrl);
       obtainer.match((l) {
         assert(false);
       }, (r) {
         List<dynamic> characterList = jsonDecode(r);
-        expect(characterList.length, 403);
+        expect(characterList.length, 77);
       });
     });
     test('tirar error de malos datos ', () async {
