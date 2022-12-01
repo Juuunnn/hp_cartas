@@ -37,6 +37,19 @@ void main() {
       expect: () => [isA<LoadingData>(), isA<ShowingNewCharacterObtained>()],
     );
     blocTest<HpCardBloc, HpCardState>(
+      'deve poder obtener guardar un nuevo personaje',
+      build: () => HpCardBloc.tester(apiUrl: testUrl),
+      act: (bloc) {
+        Future.delayed(duration, () {
+          bloc.add(InputedCharacterCode('289311629'));
+        });
+      },
+      wait: duration,
+      verify: (bloc) => bloc.obtainedCharacters.length = 2,
+      skip: 2,
+      expect: () => [isA<LoadingData>(), isA<ShowingNewCharacterObtained>()],
+    );
+    blocTest<HpCardBloc, HpCardState>(
       'deve tirar error cuando el codigo es malo',
       build: () =>
           HpCardBloc.tester(apiUrl: testUrl, daylyCharacterObtained: true),

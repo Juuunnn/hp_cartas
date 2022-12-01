@@ -49,6 +49,7 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
             emit(NoMatchForCharacterCode());
           },
           (r) {
+            obtainedCharacters.add(r);
             emit(ShowingNewCharacterObtained(r));
           },
         );
