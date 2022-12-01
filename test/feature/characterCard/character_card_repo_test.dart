@@ -234,9 +234,6 @@ void main() {
   //estas pruebas son considerando la bd real
   group('datos del json deben cumplir con...', () {
     test('todos los personajes deben generar un hashcode distinto', () {
-      // TODO: el codigo hash si se esta repitiendo, necesito averiguar por que
-      // parece haber 4 nombres repetidos
-      //necesito averiguar cuales son y si cumplen con las mismas caracteristicas
       final repo = CharacterCardRepoTest();
       final dataList = repo.getCharacterNameList(elJson: elJson);
       dataList.match(

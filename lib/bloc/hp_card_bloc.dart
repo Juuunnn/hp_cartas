@@ -134,8 +134,3 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
     return bloc;
   }
 }
-
-
-	// TODO: 5. poder obtener personajes obtenidos por conocidos
-	// 	mostrar una entrada para obtener personajes a proposito
-	// >		cada personaje tendra un codigo que permitira compartir una copia con otra persona

@@ -4,9 +4,12 @@ import 'dart:io';
 
 import 'package:hp_cartas/domain/problem.dart';
 
-// TODO: 5. poder obtener personajes obtenidos por conocidos
-// 	mostrar una entrada para obtener personajes a proposito
-// >		cada personaje tendra un codigo que permitira compartir una copia con otra persona
+// TODO: 6. tener repeticiones del mismo personaje
+// 	mostrar que es un personaje repetidos
+
+// TODO: 7. cada personaje desbloqueado tendra 3 magias aleatorias
+// 	mostrar la magia relacionado al personaje
+// >		al generarce un personaje, este recivira 3 magias aleatoriamente
 
 class HPCharacter {
   final String name;
