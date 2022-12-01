@@ -10,13 +10,13 @@ abstract class DataProvider {
   Future<Either<ProblemDataParse, String>> getSpellListFromAPI(String url);
 }
 
-class CharacterDataObtainerTest extends DataProvider {
+class DataProviderTest extends DataProvider {
   @override
   Future<Either<ProblemDataParse, String>> getCharacterListFromAPI(
       String url) async {
     late final String elJson;
     try {
-      elJson = await File(url).readAsString();
+      elJson = await File('$url/characters.json').readAsString();
     } catch (e) {
       return Future.value(left(BadAPIConection()));
     }
@@ -28,7 +28,7 @@ class CharacterDataObtainerTest extends DataProvider {
       String url) async {
     late final String elJson;
     try {
-      elJson = await File(url).readAsString();
+      elJson = await File('$url/spells.json').readAsString();
     } catch (e) {
       return Future.value(left(BadAPIConection()));
     }
