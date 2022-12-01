@@ -6,23 +6,24 @@ import 'package:hp_cartas/domain/character.dart';
 import 'package:hp_cartas/domain/code_input.dart';
 import 'package:hp_cartas/domain/problem.dart';
 
+///Esta clase se encarga de extraer informacion de un json para generar HPCharacter
 abstract class CharacterRepo {
-  Either<Problem, HPCharacter> getCharacterData(
+  Either<Problem, HPCharacter> getCharacterWithName(
       {required String characterName, required String elJson});
-  Either<Problem, List<String>> getCharacterWithName({required String elJson});
+  Either<Problem, List<String>> getCharacterNameList({required String elJson});
   Either<Problem, HPCharacter?> getCharacterWithCode(
       {required CodeInput characterCode, required String elJson});
 }
 
 class CharacterRepoTest extends CharacterRepo {
   @override
-  Either<Problem, HPCharacter> getCharacterData(
+  Either<Problem, HPCharacter> getCharacterWithName(
       {required String characterName, required String elJson}) {
     return getDataFromList(elJson, characterName);
   }
 
   @override
-  Either<Problem, List<String>> getCharacterWithName({required String elJson}) {
+  Either<Problem, List<String>> getCharacterNameList({required String elJson}) {
     return getListData(elJson);
   }
 
@@ -31,7 +32,7 @@ class CharacterRepoTest extends CharacterRepo {
       {required CodeInput characterCode, required String elJson}) {
     return getListData(elJson).match((l) => left(l), (r) {
       final resultado = r
-          .map((e) => getCharacterData(characterName: e, elJson: elJson)
+          .map((e) => getCharacterWithName(characterName: e, elJson: elJson)
                   .match<Either<Problem, HPCharacter>>(
                 (l) => left(l),
                 (r) => right(r),

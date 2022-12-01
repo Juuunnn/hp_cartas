@@ -63,12 +63,12 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
       );
     });
     on<ObtainedNewCharacter>((event, emit) {
-      final fullCharacterList = cardRepo.getCharacterWithName(elJson: rawData);
+      final fullCharacterList = cardRepo.getCharacterNameList(elJson: rawData);
       fullCharacterList.match((l) {
         emit(ErrorInesperado(l));
       }, (r) {
         final characterName = r.elementAt(randomInt(0, r.length).run());
-        final newCharacter = cardRepo.getCharacterData(
+        final newCharacter = cardRepo.getCharacterWithName(
             characterName: characterName, elJson: rawData);
         newCharacter.match((l) {
           emit(ErrorInesperado(l));
@@ -99,7 +99,7 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
       //     characterName: event.characterName, elJson: rawData);
     });
     on<NavegatedToCharacterList>((event, emit) {
-      final result = cardRepo.getCharacterWithName(elJson: rawData);
+      final result = cardRepo.getCharacterNameList(elJson: rawData);
       result.match((l) {
         emit(ErrorInesperado(l));
       }, ((r) {

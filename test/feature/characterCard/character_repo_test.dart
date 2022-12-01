@@ -14,8 +14,8 @@ void main() {
   group('character card repo deve', () {
     test('poder obtener los datos de Harry Potter', () {
       final repo = CharacterRepoTest();
-      final resultado =
-          repo.getCharacterData(characterName: 'Harry Potter', elJson: elJson);
+      final resultado = repo.getCharacterWithName(
+          characterName: 'Harry Potter', elJson: elJson);
       resultado.match((l) {
         assert(false);
       }, (r) {
@@ -42,7 +42,7 @@ void main() {
     // cho chang
     test('poder obtener los datos de Hermione Granger', () {
       final repo = CharacterRepoTest();
-      final resultado = repo.getCharacterData(
+      final resultado = repo.getCharacterWithName(
           characterName: 'Hermione Granger', elJson: elJson);
       resultado.match((l) {
         assert(false);
@@ -67,7 +67,7 @@ void main() {
     });
     test('url vacia de imagen hace que el campo sea null', () {
       final repo = CharacterRepoTest();
-      final resultado = repo.getCharacterData(
+      final resultado = repo.getCharacterWithName(
           characterName: 'Victoire Weasley', elJson: elJson);
       resultado.match((l) {
         assert(false);
@@ -235,7 +235,7 @@ void main() {
   group('datos del json deben cumplir con...', () {
     test('todos los personajes deben generar un hashcode distinto', () {
       final repo = CharacterRepoTest();
-      final dataList = repo.getCharacterWithName(elJson: elJson);
+      final dataList = repo.getCharacterNameList(elJson: elJson);
       dataList.match(
         (l) {
           assert(false);
@@ -243,7 +243,7 @@ void main() {
         (r) {
           final result = r.map((e) {
             return repo
-                .getCharacterData(characterName: e, elJson: elJson)
+                .getCharacterWithName(characterName: e, elJson: elJson)
                 .match((l) => left(l), (r) => right(r.hashCode));
           }).toSet();
           expect(result.length, r.length);
