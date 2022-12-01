@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hp_cartas/bloc/hp_card_bloc.dart';
 import 'package:hp_cartas/feature/characterCard/character_card_repo.dart';
+import 'package:hp_cartas/feature/characterCard/view/bad_code_input.dart';
 import 'package:hp_cartas/feature/characterCard/view/character_card_view.dart';
 import 'package:hp_cartas/feature/characterCard/view/character_list_view.dart';
+import 'package:hp_cartas/feature/characterCard/view/character_obtainer_view.dart';
 import 'package:hp_cartas/feature/characterDataProvider/view/data_provider_error_view.dart';
 import 'package:hp_cartas/feature/characterDataProvider/view/new_character_obtained_view.dart';
 import 'package:hp_cartas/genericView/bad_state_view.dart';
@@ -65,15 +67,20 @@ class Pantalla extends StatelessWidget {
           );
         }
         if (state is ShowingCharacterList) {
-          return CharacterListView(
-            characterList: state.characterList,
-            onClick: (String characterName) {
-              context
-                  .read<HpCardBloc>()
-                  .add(SelectedCharacterCard(characterName: characterName));
-            },
-            obtainedCharacters: state.obtainedCharacters,
-          );
+          return Stack(children: [
+            CharacterListView(
+              characterList: state.characterList,
+              onClick: (String characterName) {
+                context
+                    .read<HpCardBloc>()
+                    .add(SelectedCharacterCard(characterName: characterName));
+              },
+              obtainedCharacters: state.obtainedCharacters,
+            ),
+            CharacterObtainerView(onSend: (String code) {
+              context.read<HpCardBloc>().add(InputedCharacterCode(code));
+            }),
+          ]);
         }
         if (state is ShowingNewCharacterObtained) {
           return NewCharacterObtainedView(
@@ -88,6 +95,14 @@ class Pantalla extends StatelessWidget {
         }
         if (state is DataComunicatioError) {
           return DataProviderErrorView(data: state.parseProblem);
+        }
+        if (state is UserInteraction) {
+          return BadCodeInputView(
+            data: state,
+            onClick: () {
+              context.read<HpCardBloc>().add(NavegatedToCharacterList());
+            },
+          );
         }
         return const BadStateView();
       },
