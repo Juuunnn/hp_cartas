@@ -77,7 +77,7 @@ class _InputCodeFormState extends State<InputCodeForm> {
                 child: TextField(
                   decoration:
                       const InputDecoration(hintText: 'codigo de numeros'),
-                  maxLength: 9,
+                  // maxLength: 9,
                   autofocus: true,
                   keyboardType: TextInputType.number,
                   controller: _controller,
