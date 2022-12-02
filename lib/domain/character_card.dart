@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+
 import 'package:hp_cartas/domain/character.dart';
 import 'package:hp_cartas/domain/problem.dart';
 import 'package:hp_cartas/domain/spell.dart';
@@ -33,7 +35,7 @@ class CharacterCard {
     return CharacterCard._(
       character: HPCharacter.fromMap(map['character'] as Map<String, dynamic>),
       spells: List<Spell>.from(
-        (map['spells'] as List<int>).map<Spell>(
+        (map['spells'] as List<dynamic>).map<Spell>(
           (x) => Spell.fromMap(x as Map<String, dynamic>),
         ),
       ),
@@ -44,4 +46,27 @@ class CharacterCard {
 
   factory CharacterCard.fromJson(String source) =>
       CharacterCard.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  bool operator ==(covariant CharacterCard other) {
+    if (identical(this, other)) return true;
+
+    return other.character == character && listEquals(other.spells, spells);
+  }
+
+  @override
+  int get hashCode => character.hashCode ^ spells.hashCode;
+
+  CharacterCard copyWith({
+    HPCharacter? character,
+    List<Spell>? spells,
+  }) {
+    return CharacterCard._(
+      character: character ?? this.character,
+      spells: spells ?? this.spells,
+    );
+  }
+
+  @override
+  String toString() => 'CharacterCard(character: $character, spells: $spells)';
 }

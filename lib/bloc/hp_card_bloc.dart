@@ -7,6 +7,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:hp_cartas/domain/app_storage.dart';
 import 'package:hp_cartas/domain/character_card.dart';
 import 'package:hp_cartas/feature/characterCard/spell_repo.dart';
+import 'package:hp_cartas/feature/localStorage/local_storage_writer.dart';
 import 'package:meta/meta.dart';
 
 import 'package:hp_cartas/domain/character.dart';
@@ -24,13 +25,15 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
   final SpellRepo spellRepo;
   final ApiDataProvider dataProvider;
   AppStorage appData;
+  final String fileName;
 
-  HpCardBloc._(
-      {required this.cardRepo,
-      required this.spellRepo,
-      required this.dataProvider,
-      required this.appData})
-      : super(HpCardInitial()) {
+  HpCardBloc._({
+    required this.cardRepo,
+    required this.spellRepo,
+    required this.dataProvider,
+    required this.appData,
+    required this.fileName,
+  }) : super(HpCardInitial()) {
     on<InputedCharacterCode>((event, emit) async {
       emit(LoadingData());
       final characterObtained = await cardRepo.getCharacterWithCode(
@@ -144,6 +147,7 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
             CharacterCard.constructor(
                 character: event.character, spells: spellList),
             event.character.name);
+        LocalStorageWriter.writeToLocalDB(appData, fileName);
         // appData.obtainedCharacters[event.character.name]!.add(
         //     CharacterCard.constructor(
         //         character: event.character, spells: spellList));
@@ -157,13 +161,25 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
     required CharacterRepo cardRepo,
     required SpellRepo spellRepo,
     required ApiDataProvider dataProvider,
+    String fileName = 'localDb',
   }) {
-    HpCardBloc bloc = HpCardBloc._(
-      cardRepo: cardRepo,
-      dataProvider: dataProvider,
-      spellRepo: spellRepo,
-      appData: AppStorage(),
+    final dbRead = LocalStorageWriter.readFromLocalDB(fileName);
+
+    HpCardBloc bloc = dbRead.match(
+      (l) => HpCardBloc._(
+          cardRepo: cardRepo,
+          dataProvider: dataProvider,
+          spellRepo: spellRepo,
+          appData: AppStorage.constructor(daylyCharacterObtained: false),
+          fileName: fileName),
+      (r) => HpCardBloc._(
+          cardRepo: cardRepo,
+          dataProvider: dataProvider,
+          spellRepo: spellRepo,
+          appData: r,
+          fileName: fileName),
     );
+
     bloc.add(StartedLoadingData());
     return bloc;
   }
@@ -171,20 +187,16 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
   factory HpCardBloc.tester({
     required String apiUrl,
     bool daylyCharacterObtained = false,
+    String fileName = 'localDb',
   }) {
     HpCardBloc bloc = HpCardBloc._(
-      cardRepo: CharacterRepoTest(),
-      spellRepo: SpellRepoTest(),
-      dataProvider: ApiDataProviderTest(apiUrl),
-      appData: AppStorage(daylyCharacterObtained: daylyCharacterObtained),
-    );
+        cardRepo: CharacterRepoTest(),
+        spellRepo: SpellRepoTest(),
+        dataProvider: ApiDataProviderTest(apiUrl),
+        appData: AppStorage.constructor(
+            daylyCharacterObtained: daylyCharacterObtained),
+        fileName: fileName);
     bloc.add(StartedLoadingData());
     return bloc;
   }
 }
-
-
-
-	// TODO: 8. almacenar y recuperar personajes guardados desde la memoria local
-	// >		cada vez que se inicie la aplicacion debe cargar la informacion desde almacenamiento local
-	// >		los personajes en la aplicacion y en almacenamiento deben estar sincronizados
