@@ -191,3 +191,7 @@ class CharacterCard {
     return CharacterCard._(character: character, spells: spells);
   }
 }
+
+	// TODO: 8. almacenar y recuperar personajes guardados desde la memoria local
+	// >		cada vez que se inicie la aplicacion debe cargar la informacion desde almacenamiento local
+	// >		los personajes en la aplicacion y en almacenamiento deben estar sincronizados
