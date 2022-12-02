@@ -32,40 +32,18 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
   }) : super(HpCardInitial()) {
     on<InputedCharacterCode>((event, emit) async {
       emit(LoadingData());
-      Either<Problem, CodeInput> codigo() {
-        try {
-          return right(CodeInput.constructor(event.propCharacter));
-        } on InvalidCode catch (e) {
-          return left(e);
-        } catch (e) {
-          return left(UnknownProblem(e.toString()));
-        }
-      }
-
-      final result = codigo();
-      await result.match(
+      final characterObtained = await cardRepo.getCharacterWithCode(
+          characterCode: event.codeInput, apiDataProvider: dataProvider);
+      characterObtained.match(
         (l) {
-          if (l is InvalidCode) {
-            emit(BadCodeInput(l));
-          } else {
-            emit(ErrorInesperado(l));
-          }
+          emit(ErrorInesperado(l));
         },
-        (r) async {
-          final characterObtained = await cardRepo.getCharacterWithCode(
-              characterCode: r, apiDataProvider: dataProvider);
-          characterObtained.match(
-            (l) {
-              emit(ErrorInesperado(l));
-            },
-            (r) {
-              if (r == null) {
-                emit(NoMatchForCharacterCode());
-              } else {
-                add(ObtainedNewCharacter(r));
-              }
-            },
-          );
+        (r) {
+          if (r == null) {
+            emit(NoMatchForCharacterCode());
+          } else {
+            add(ObtainedNewCharacter(r));
+          }
         },
       );
     });

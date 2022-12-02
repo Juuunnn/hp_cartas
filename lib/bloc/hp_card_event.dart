@@ -31,9 +31,9 @@ class StartedLoadingData extends HpCardEvent {
 class ObtainedCharacterOfTheDay extends HpCardEvent {}
 
 class InputedCharacterCode extends HpCardEvent {
-  final String propCharacter;
+  final CodeInput codeInput;
 
-  InputedCharacterCode(this.propCharacter);
+  InputedCharacterCode(this.codeInput);
 }
 
 class ObtainedNewCharacter extends HpCardEvent {
