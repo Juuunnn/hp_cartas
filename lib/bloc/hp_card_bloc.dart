@@ -36,7 +36,11 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
           characterCode: event.codeInput, apiDataProvider: dataProvider);
       characterObtained.match(
         (l) {
-          emit(ErrorInesperado(l));
+          if (l is BadAPIConection) {
+            emit(DataComunicatioError(l));
+          } else {
+            emit(ErrorInesperado(l));
+          }
         },
         (r) {
           if (r == null) {
@@ -51,14 +55,22 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
       final fullCharacterList =
           await cardRepo.getCharacterNameList(apiDataProvider: dataProvider);
       await fullCharacterList.match((l) {
-        emit(ErrorInesperado(l));
+        if (l is BadAPIConection) {
+          emit(DataComunicatioError(l));
+        } else {
+          emit(ErrorInesperado(l));
+        }
       }, (r) async {
         final characterName = r.elementAt(randomInt(0, r.length).run());
         final newCharacter = await cardRepo.getCharacterWithName(
             characterName: characterName, apiDataProvider: dataProvider);
         await newCharacter.match(
           (l) {
-            emit(ErrorInesperado(l));
+            if (l is BadAPIConection) {
+              emit(DataComunicatioError(l));
+            } else {
+              emit(ErrorInesperado(l));
+            }
           },
           (r) async {
             add(ObtainedNewCharacter(r));
@@ -91,7 +103,11 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
       final result =
           await cardRepo.getCharacterNameList(apiDataProvider: dataProvider);
       result.match((l) {
-        emit(ErrorInesperado(l));
+        if (l is BadAPIConection) {
+          emit(DataComunicatioError(l));
+        } else {
+          emit(ErrorInesperado(l));
+        }
       }, ((r) {
         if (!daylyCharacterObtained) {
           daylyCharacterObtained = true;
@@ -110,7 +126,11 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
       final spellSearchResult =
           await spellRepo.getSpellList(apiDataProvider: dataProvider);
       spellSearchResult.match((l) {
-        emit(ErrorInesperado(l));
+        if (l is BadAPIConection) {
+          emit(DataComunicatioError(l));
+        } else {
+          emit(ErrorInesperado(l));
+        }
       }, (r) {
         final spellList = [
           r.removeAt(Random().nextInt(r.length)),

@@ -29,7 +29,7 @@ class DataProviderErrorView extends StatelessWidget {
             );
           }),
           TextButton(
-              onPressed: onClick, child: const Text('volver a intentar')),
+              onPressed: onClick, child: const Text('intentar reconectar')),
         ],
       ),
     );
