@@ -2,16 +2,15 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hp_cartas/domain/problem.dart';
-import 'package:hp_cartas/feature/characterDataProvider/data_provider.dart';
+import 'package:hp_cartas/feature/characterDataProvider/api_data_provider.dart';
 
-const String testUrl = 'test/characters.json';
-const String spellTestUrl = 'test/spells.json';
+const String testUrl = 'test';
 
 void main() {
   group('character data obtainer getCharacterListFromAPI debe ', (() {
     test('tener largo de 403', () async {
       final obtainer =
-          await DataProviderTest().getCharacterListFromAPI(testUrl);
+          await ApiDataProviderTest(testUrl).getCharacterListFromAPI();
       obtainer.match((l) {
         assert(false);
       }, (r) {
@@ -20,8 +19,9 @@ void main() {
       });
     });
     test('tirar error de malos datos ', () async {
-      final obtainer = await DataProviderTest().getCharacterListFromAPI(
-          'test/feature/characterDataProvider/badJson.txt');
+      final obtainer = await ApiDataProviderTest(
+              'test/feature/characterDataProvider/badJson')
+          .getCharacterListFromAPI();
       obtainer.match((l) {
         expect(l, isA<InvalidDataRecived>());
       }, (r) {
@@ -29,7 +29,8 @@ void main() {
       });
     });
     test('tirar error de mala coneccion', () async {
-      final obtainer = await DataProviderTest().getCharacterListFromAPI('fdsa');
+      final obtainer =
+          await ApiDataProviderTest('fdsa').getCharacterListFromAPI();
       obtainer.match((l) {
         expect(l, isA<BadAPIConection>());
       }, (r) {
@@ -50,8 +51,7 @@ void main() {
   // }));
   group('character data obtainer getSpellListFromAPI debe ', (() {
     test('tener largo de 77', () async {
-      final obtainer =
-          await DataProviderTest().getSpellListFromAPI(spellTestUrl);
+      final obtainer = await ApiDataProviderTest(testUrl).getSpellListFromAPI();
       obtainer.match((l) {
         assert(false);
       }, (r) {
@@ -60,8 +60,9 @@ void main() {
       });
     });
     test('tirar error de malos datos ', () async {
-      final obtainer = await DataProviderTest().getCharacterListFromAPI(
-          'test/feature/characterDataProvider/badJson.txt');
+      final obtainer = await ApiDataProviderTest(
+              'test/feature/characterDataProvider/badJson')
+          .getCharacterListFromAPI();
       obtainer.match((l) {
         expect(l, isA<InvalidDataRecived>());
       }, (r) {
@@ -69,7 +70,8 @@ void main() {
       });
     });
     test('tirar error de mala coneccion', () async {
-      final obtainer = await DataProviderTest().getCharacterListFromAPI('fdsa');
+      final obtainer =
+          await ApiDataProviderTest('fdsa').getCharacterListFromAPI();
       obtainer.match((l) {
         expect(l, isA<BadAPIConection>());
       }, (r) {

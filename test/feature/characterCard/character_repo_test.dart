@@ -7,15 +7,16 @@ import 'package:hp_cartas/domain/character.dart';
 import 'package:hp_cartas/domain/code_input.dart';
 import 'package:hp_cartas/domain/problem.dart';
 import 'package:hp_cartas/feature/characterCard/character_repo.dart';
+import 'package:hp_cartas/feature/characterDataProvider/api_data_provider.dart';
 
-final elJson = File('test/characters.json').readAsStringSync();
-
+const elJson = 'test';
+final ApiDataProvider dataProvider = ApiDataProviderTest(elJson);
 void main() {
   group('character card repo deve', () {
-    test('poder obtener los datos de Harry Potter', () {
+    test('poder obtener los datos de Harry Potter', () async {
       final repo = CharacterRepoTest();
-      final resultado = repo.getCharacterWithName(
-          characterName: 'Harry Potter', elJson: elJson);
+      final resultado = await repo.getCharacterWithName(
+          characterName: 'Harry Potter', apiDataProvider: dataProvider);
       resultado.match((l) {
         assert(false);
       }, (r) {
@@ -40,10 +41,10 @@ void main() {
     //herminony tira error
     //Minerva McGonagall
     // cho chang
-    test('poder obtener los datos de Hermione Granger', () {
+    test('poder obtener los datos de Hermione Granger', () async {
       final repo = CharacterRepoTest();
-      final resultado = repo.getCharacterWithName(
-          characterName: 'Hermione Granger', elJson: elJson);
+      final resultado = await repo.getCharacterWithName(
+          characterName: 'Hermione Granger', apiDataProvider: dataProvider);
       resultado.match((l) {
         assert(false);
       }, (r) {
@@ -65,10 +66,10 @@ void main() {
             ));
       });
     });
-    test('url vacia de imagen hace que el campo sea null', () {
+    test('url vacia de imagen hace que el campo sea null', () async {
       final repo = CharacterRepoTest();
-      final resultado = repo.getCharacterWithName(
-          characterName: 'Victoire Weasley', elJson: elJson);
+      final resultado = await repo.getCharacterWithName(
+          characterName: 'Victoire Weasley', apiDataProvider: dataProvider);
       resultado.match((l) {
         assert(false);
       }, (r) {
@@ -202,10 +203,11 @@ void main() {
     });
   });
   group('getCharacterCharacterWithCode debe ', () {
-    test('debolver Albert Runcorn con el codigo: 289311629', () {
+    test('debolver Albert Runcorn con el codigo: 289311629', () async {
       final repo = CharacterRepoTest();
-      final resultado = repo.getCharacterWithCode(
-          characterCode: CodeInput.constructor('289311629'), elJson: elJson);
+      final resultado = await repo.getCharacterWithCode(
+          characterCode: CodeInput.constructor('289311629'),
+          apiDataProvider: dataProvider);
       resultado.match((l) {
         assert(false);
       }, (r) {
@@ -220,10 +222,11 @@ void main() {
                 wandProp: Barita.vacia()));
       });
     });
-    test('debolver error con el codigo: 289311', () {
+    test('debolver error con el codigo: 289311', () async {
       final repo = CharacterRepoTest();
-      final resultado = repo.getCharacterWithCode(
-          characterCode: CodeInput.constructor('289311'), elJson: elJson);
+      final resultado = await repo.getCharacterWithCode(
+          characterCode: CodeInput.constructor('289311'),
+          apiDataProvider: dataProvider);
       resultado.match((l) {
         assert(false);
       }, (r) {
@@ -233,19 +236,21 @@ void main() {
   });
   //estas pruebas son considerando la bd real
   group('datos del json deben cumplir con...', () {
-    test('todos los personajes deben generar un hashcode distinto', () {
+    test('todos los personajes deben generar un hashcode distinto', () async {
       final repo = CharacterRepoTest();
-      final dataList = repo.getCharacterNameList(elJson: elJson);
-      dataList.match(
+      final dataList =
+          await repo.getCharacterNameList(apiDataProvider: dataProvider);
+      await dataList.match(
         (l) {
           assert(false);
         },
-        (r) {
-          final result = r.map((e) {
-            return repo
-                .getCharacterWithName(characterName: e, elJson: elJson)
-                .match((l) => left(l), (r) => right(r.hashCode));
-          }).toSet();
+        (r) async {
+          final getCharacers = r.map((e) async {
+            final res = await repo.getCharacterWithName(
+                characterName: e, apiDataProvider: dataProvider);
+            return res.match((l) => left(l), (r) => right(r.hashCode));
+          }).toList();
+          final result = await Future.wait(getCharacers);
           expect(result.length, r.length);
           expect(false, result.any((element) => element.isLeft()));
         },

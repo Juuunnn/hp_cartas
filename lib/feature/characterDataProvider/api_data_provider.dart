@@ -4,35 +4,36 @@ import 'dart:io';
 import 'package:fpdart/fpdart.dart';
 import 'package:hp_cartas/domain/problem.dart';
 
-abstract class DataProvider {
+abstract class ApiDataProvider {
+  final String url;
+
+  ApiDataProvider(this.url);
   // Future<Either<Problem, String>> getFromLocalDB(String file);
-  Future<Either<ProblemDataParse, String>> getCharacterListFromAPI(String url);
-  Future<Either<ProblemDataParse, String>> getSpellListFromAPI(String url);
+  Future<Either<ProblemDataParse, String>> getCharacterListFromAPI();
+  Future<Either<ProblemDataParse, String>> getSpellListFromAPI();
 }
 
-class DataProviderTest extends DataProvider {
+class ApiDataProviderTest extends ApiDataProvider {
+  ApiDataProviderTest(super.url);
+
   @override
-  Future<Either<ProblemDataParse, String>> getCharacterListFromAPI(
-      String url) async {
-    late final String elJson;
+  Future<Either<ProblemDataParse, String>> getCharacterListFromAPI() async {
     try {
-      elJson = await File('$url/characters.json').readAsString();
+      final String elJson = await File('$url/characters.json').readAsString();
+      return Future.value(validateData(elJson));
     } catch (e) {
       return Future.value(left(BadAPIConection()));
     }
-    return Future.value(validateData(elJson));
   }
 
   @override
-  Future<Either<ProblemDataParse, String>> getSpellListFromAPI(
-      String url) async {
-    late final String elJson;
+  Future<Either<ProblemDataParse, String>> getSpellListFromAPI() async {
     try {
-      elJson = await File('$url/spells.json').readAsString();
+      final String elJson = await File('$url/spells.json').readAsString();
+      return Future.value(validateData(elJson));
     } catch (e) {
       return Future.value(left(BadAPIConection()));
     }
-    return Future.value(validateData(elJson));
   }
 
   // @override
@@ -45,8 +46,8 @@ class DataProviderTest extends DataProvider {
 Either<ProblemDataParse, String> validateData(String data) {
   try {
     List<dynamic> listaCharacters = jsonDecode(data);
+    return right(data);
   } catch (e) {
     return left(InvalidDataRecived());
   }
-  return right(data);
 }

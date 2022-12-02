@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hp_cartas/bloc/hp_card_bloc.dart';
+import 'package:hp_cartas/domain/code_input.dart';
 import 'package:hp_cartas/feature/characterCard/character_repo.dart';
 import 'package:hp_cartas/feature/characterCard/view/bad_code_input.dart';
 import 'package:hp_cartas/feature/characterCard/view/character_card_view.dart';
@@ -77,7 +78,7 @@ class Pantalla extends StatelessWidget {
               },
               obtainedCharacters: state.obtainedCharacters,
             ),
-            CharacterObtainerView(onSend: (String code) {
+            CharacterObtainerView(onSend: (CodeInput code) {
               context.read<HpCardBloc>().add(InputedCharacterCode(code));
             }),
           ]);
