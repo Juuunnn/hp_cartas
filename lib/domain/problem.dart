@@ -35,3 +35,7 @@ class IsNotNumber extends InvalidCode {}
 abstract class ProblemSpellList extends Problem {}
 
 class IncorrectSpellLength extends ProblemSpellList {}
+
+abstract class ProblemLocalDB extends Problem {}
+
+class NoDBFound extends ProblemLocalDB {}

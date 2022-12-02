@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hp_cartas/bloc/hp_card_bloc.dart';
 import 'package:hp_cartas/domain/character.dart';
+import 'package:hp_cartas/domain/character_card.dart';
 import 'package:hp_cartas/feature/characterCard/component/character_card_component.dart';
 
 import '../component/return_button_component.dart';
