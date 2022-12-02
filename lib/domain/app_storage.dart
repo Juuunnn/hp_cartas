@@ -2,19 +2,17 @@
 import 'package:hp_cartas/domain/character_card.dart';
 
 class AppStorage {
-  late Map<String, List<CharacterCard>> _obtainedCharacters;
+  final Map<String, List<CharacterCard>> _obtainedCharacters = {};
+  bool daylyCharacterObtained;
 
   Map<String, List<CharacterCard>> get obtainedCharacters =>
       _obtainedCharacters;
 
-  set obtainedCharacters(Map<String, List<CharacterCard>> obtainedCharacters) {
-    _obtainedCharacters = obtainedCharacters;
+  void newCharacter(CharacterCard character, String key) {
+    _obtainedCharacters[key]!.add(character);
   }
 
-  bool daylyCharacterObtained;
   AppStorage({
     this.daylyCharacterObtained = true,
-  }) {
-    obtainedCharacters = {};
-  }
+  });
 }

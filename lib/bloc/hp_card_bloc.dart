@@ -139,9 +139,14 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
           r.removeAt(Random().nextInt(r.length)),
           r.removeAt(Random().nextInt(r.length)),
         ];
-        appData.obtainedCharacters[event.character.name]!.add(
+
+        appData.newCharacter(
             CharacterCard.constructor(
-                character: event.character, spells: spellList));
+                character: event.character, spells: spellList),
+            event.character.name);
+        // appData.obtainedCharacters[event.character.name]!.add(
+        //     CharacterCard.constructor(
+        //         character: event.character, spells: spellList));
         emit(ShowingNewCharacterObtained(event.character));
       });
     });
