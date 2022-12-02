@@ -26,7 +26,7 @@ void main() {
         });
       },
       wait: testReview,
-      skip: 2,
+      skip: 3,
       expect: () => [isA<ShowingCharacterCard>()],
     );
     blocTest<HpCardBloc, HpCardState>(
@@ -39,7 +39,7 @@ void main() {
         });
       },
       wait: testReview,
-      skip: 1,
+      skip: 2,
       expect: () => [isA<LoadingData>(), isA<ShowingNewCharacterObtained>()],
     );
     blocTest<HpCardBloc, HpCardState>(
@@ -52,7 +52,7 @@ void main() {
       },
       wait: testReview,
       verify: (bloc) => bloc.obtainedCharacters.values.toList().length == 2,
-      skip: 2,
+      skip: 3,
       expect: () => [isA<LoadingData>(), isA<ShowingNewCharacterObtained>()],
     );
     blocTest<HpCardBloc, HpCardState>(
@@ -74,7 +74,7 @@ void main() {
       },
       wait: const Duration(milliseconds: 4000),
       verify: (bloc) => bloc.obtainedCharacters['Albert Runcorn']!.length == 4,
-      skip: 1,
+      skip: 2,
       expect: () => [
         isA<LoadingData>(),
         isA<ShowingNewCharacterObtained>(),
@@ -147,7 +147,7 @@ void main() {
         });
       },
       wait: testReview,
-      skip: 2,
+      skip: 3,
       expect: () => [isA<ShowingCharacterCard>(), isA<ShowingCharacterList>()],
     );
     blocTest<HpCardBloc, HpCardState>(
@@ -161,6 +161,7 @@ void main() {
       build: () =>
           HpCardBloc.tester(apiUrl: 'adsfa', daylyCharacterObtained: true),
       wait: testReview,
+      skip: 1,
       expect: () => [isA<DataComunicatioError>()],
     );
   });

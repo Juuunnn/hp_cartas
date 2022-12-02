@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:fpdart/fpdart.dart';
 import 'package:hp_cartas/domain/problem.dart';
+import 'package:http/http.dart' as http;
 
 abstract class ApiDataProvider {
   final String url;
@@ -35,12 +36,40 @@ class ApiDataProviderTest extends ApiDataProvider {
       return Future.value(left(BadAPIConection()));
     }
   }
+}
 
-  // @override
-  // Future<Either<Problem, String>> getFromLocalDB(String file) {
-  //   // TODO: implement getFromLocalDB
-  //   throw UnimplementedError();
-  // }
+class ApiDataProviderReal extends ApiDataProvider {
+  ApiDataProviderReal(super.url);
+
+  @override
+  Future<Either<ProblemDataParse, String>> getCharacterListFromAPI() async {
+    Uri direccion = Uri.https(url, 'api/characters');
+
+    try {
+      final elJson = await http.get(direccion);
+      if (elJson.statusCode != 200) {
+        return left(BadAPIConection());
+      }
+      return Future.value(validateData(elJson.body));
+    } catch (e) {
+      return Future.value(left(BadAPIConection()));
+    }
+  }
+
+  @override
+  Future<Either<ProblemDataParse, String>> getSpellListFromAPI() async {
+    Uri direccion = Uri.https(url, 'api/spells');
+
+    try {
+      final elJson = await http.get(direccion);
+      if (elJson.statusCode != 200) {
+        return left(BadAPIConection());
+      }
+      return Future.value(validateData(elJson.body));
+    } catch (e) {
+      return Future.value(left(BadAPIConection()));
+    }
+  }
 }
 
 Either<ProblemDataParse, String> validateData(String data) {

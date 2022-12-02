@@ -22,11 +22,7 @@ class SelectedCharacterCard extends HpCardEvent {
 
 class NavegatedToCharacterList extends HpCardEvent {}
 
-class StartedLoadingData extends HpCardEvent {
-  final String apiUrl;
-
-  StartedLoadingData({required this.apiUrl});
-}
+class StartedLoadingData extends HpCardEvent {}
 
 class ObtainedCharacterOfTheDay extends HpCardEvent {}
 
