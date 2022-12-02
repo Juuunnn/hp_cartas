@@ -77,7 +77,7 @@ Either<Problem, HPCharacter> getDataFromList(
   try {
     List<dynamic> listaCharacters = jsonDecode(ejJson);
     final resultado = listaCharacters.firstWhere(
-      (element) => element["name"] == characterName,
+      (element) => element["name"] == characterName && element["image"] != '',
     );
 
     return right(HPCharacter.fromMap(resultado));
@@ -89,7 +89,10 @@ Either<Problem, HPCharacter> getDataFromList(
 Either<Problem, List<String>> getListData(String ejJson) {
   try {
     List<dynamic> listaCharacters = jsonDecode(ejJson);
-    final resultado = listaCharacters.map((e) => e["name"].toString()).toList();
+    final resultado = listaCharacters
+        .filter((t) => t["image"] != '')
+        .map((e) => e["name"].toString())
+        .toList();
     return right(resultado.toSet().toList());
     // return right(resultado);
   } catch (e) {

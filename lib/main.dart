@@ -34,13 +34,14 @@ class MyApp extends StatelessWidget {
           spellRepo: SpellRepoTest(),
           dataProvider: ApiDataProviderReal(apiUrl)),
       child: MaterialApp(
-        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        title: 'harry potter card collector',
         theme: ThemeData(
           primarySwatch: Colors.brown,
         ),
         home: Scaffold(
           appBar: AppBar(
-            title: const Text('Flutter Demo Home Page'),
+            title: const Text('My Cards'),
           ),
           body: const Pantalla(),
         ),

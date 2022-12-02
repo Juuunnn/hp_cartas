@@ -4,7 +4,10 @@ import 'dart:math';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:hp_cartas/domain/app_storage.dart';
+import 'package:hp_cartas/domain/character_card.dart';
 import 'package:hp_cartas/feature/characterCard/spell_repo.dart';
+import 'package:hp_cartas/feature/localStorage/local_storage_writer.dart';
 import 'package:meta/meta.dart';
 
 import 'package:hp_cartas/domain/character.dart';
@@ -21,14 +24,15 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
   final CharacterRepo cardRepo;
   final SpellRepo spellRepo;
   final ApiDataProvider dataProvider;
-  Map<String, List<CharacterCard>> obtainedCharacters = {};
-  bool daylyCharacterObtained;
+  AppStorage appData;
+  final String fileName;
 
   HpCardBloc._({
     required this.cardRepo,
     required this.spellRepo,
     required this.dataProvider,
-    this.daylyCharacterObtained = false,
+    required this.appData,
+    required this.fileName,
   }) : super(HpCardInitial()) {
     on<InputedCharacterCode>((event, emit) async {
       emit(LoadingData());
@@ -89,7 +93,8 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
       });
     });
     on<SelectedCharacterCard>((event, emit) {
-      List<CharacterCard>? result = obtainedCharacters[event.characterName];
+      List<CharacterCard>? result =
+          appData.obtainedCharacters[event.characterName];
       if (result == null) {
         emit(ErrorInesperado(
             UnknownProblem('error buscando el personaje localmente')));
@@ -109,19 +114,19 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
           emit(ErrorInesperado(l));
         }
       }, ((r) {
-        if (!daylyCharacterObtained) {
-          daylyCharacterObtained = true;
+        if (!appData.daylyCharacterObtained) {
+          appData.daylyCharacterObtained = true;
           add(ObtainedCharacterOfTheDay());
         }
         emit(ShowingCharacterList(
             r,
-            obtainedCharacters
+            appData.obtainedCharacters
                 .map((key, value) => MapEntry(key, value.length))));
       }));
     });
     on<ObtainedNewCharacter>((event, Emitter<HpCardState> emit) async {
-      if (!obtainedCharacters.containsKey(event.character.name)) {
-        obtainedCharacters[event.character.name] = [];
+      if (!appData.obtainedCharacters.containsKey(event.character.name)) {
+        appData.obtainedCharacters[event.character.name] = [];
       }
       final spellSearchResult =
           await spellRepo.getSpellList(apiDataProvider: dataProvider);
@@ -137,8 +142,15 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
           r.removeAt(Random().nextInt(r.length)),
           r.removeAt(Random().nextInt(r.length)),
         ];
-        obtainedCharacters[event.character.name]!.add(CharacterCard.constructor(
-            character: event.character, spells: spellList));
+
+        appData.newCharacter(
+            CharacterCard.constructor(
+                character: event.character, spells: spellList),
+            event.character.name);
+        LocalStorageWriter.writeToLocalDB(appData, fileName);
+        // appData.obtainedCharacters[event.character.name]!.add(
+        //     CharacterCard.constructor(
+        //         character: event.character, spells: spellList));
         emit(ShowingNewCharacterObtained(event.character));
       });
     });
@@ -149,12 +161,25 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
     required CharacterRepo cardRepo,
     required SpellRepo spellRepo,
     required ApiDataProvider dataProvider,
+    String fileName = 'localDb',
   }) {
-    HpCardBloc bloc = HpCardBloc._(
-      cardRepo: cardRepo,
-      dataProvider: dataProvider,
-      spellRepo: spellRepo,
+    final dbRead = LocalStorageWriter.readFromLocalDB(fileName);
+
+    HpCardBloc bloc = dbRead.match(
+      (l) => HpCardBloc._(
+          cardRepo: cardRepo,
+          dataProvider: dataProvider,
+          spellRepo: spellRepo,
+          appData: AppStorage.constructor(daylyCharacterObtained: false),
+          fileName: fileName),
+      (r) => HpCardBloc._(
+          cardRepo: cardRepo,
+          dataProvider: dataProvider,
+          spellRepo: spellRepo,
+          appData: r,
+          fileName: fileName),
     );
+
     bloc.add(StartedLoadingData());
     return bloc;
   }
@@ -162,32 +187,16 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
   factory HpCardBloc.tester({
     required String apiUrl,
     bool daylyCharacterObtained = false,
+    String fileName = 'localDb',
   }) {
     HpCardBloc bloc = HpCardBloc._(
-      cardRepo: CharacterRepoTest(),
-      spellRepo: SpellRepoTest(),
-      dataProvider: ApiDataProviderTest(apiUrl),
-      daylyCharacterObtained: daylyCharacterObtained,
-    );
+        cardRepo: CharacterRepoTest(),
+        spellRepo: SpellRepoTest(),
+        dataProvider: ApiDataProviderTest(apiUrl),
+        appData: AppStorage.constructor(
+            daylyCharacterObtained: daylyCharacterObtained),
+        fileName: fileName);
     bloc.add(StartedLoadingData());
     return bloc;
-  }
-}
-
-class CharacterCard {
-  final HPCharacter character;
-  final List<Spell> spells;
-  CharacterCard._({
-    required this.character,
-    required this.spells,
-  });
-
-  /// el largo de la lista de hechizos debe ser 3 exactamente
-  factory CharacterCard.constructor(
-      {required HPCharacter character, required List<Spell> spells}) {
-    if (spells.length != 3) {
-      throw IncorrectSpellLength();
-    }
-    return CharacterCard._(character: character, spells: spells);
   }
 }

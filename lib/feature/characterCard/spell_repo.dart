@@ -32,11 +32,3 @@ Either<Problem, List<Spell>> getListData(String elJson) {
     return left(UnknownProblem(e.toString()));
   }
 }
-
-
-/* TODO: actividades a lograr
-
-  Cambiar que cada repositorio se comunique con la direccion de la api que le corresponde
-    obtener datos de un personaje sea de la direccion especifica de la api
-    lista de nombres de la general
-*/

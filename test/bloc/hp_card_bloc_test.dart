@@ -21,8 +21,8 @@ void main() {
       act: (bloc) {
         Future.delayed(duration, () {
           bloc.add(SelectedCharacterCard(
-              characterName: bloc.obtainedCharacters.entries.first.value.first
-                  .character.name));
+              characterName: bloc.appData.obtainedCharacters.entries.first.value
+                  .first.character.name));
         });
       },
       wait: testReview,
@@ -51,7 +51,8 @@ void main() {
         });
       },
       wait: testReview,
-      verify: (bloc) => bloc.obtainedCharacters.values.toList().length == 2,
+      verify: (bloc) =>
+          bloc.appData.obtainedCharacters.values.toList().length == 2,
       skip: 3,
       expect: () => [isA<LoadingData>(), isA<ShowingNewCharacterObtained>()],
     );
@@ -73,7 +74,8 @@ void main() {
         });
       },
       wait: const Duration(milliseconds: 4000),
-      verify: (bloc) => bloc.obtainedCharacters['Albert Runcorn']!.length == 4,
+      verify: (bloc) =>
+          bloc.appData.obtainedCharacters['Albert Runcorn']!.length == 4,
       skip: 2,
       expect: () => [
         isA<LoadingData>(),
@@ -142,7 +144,8 @@ void main() {
       act: (bloc) {
         Future.delayed(duration, () {
           bloc.add(SelectedCharacterCard(
-              characterName: bloc.obtainedCharacters.entries.first.key));
+              characterName:
+                  bloc.appData.obtainedCharacters.entries.first.key));
           bloc.add(NavegatedToCharacterList());
         });
       },
@@ -153,7 +156,8 @@ void main() {
     blocTest<HpCardBloc, HpCardState>(
       'deve desbloquear un nuevo personaje al iniciar',
       build: () => HpCardBloc.tester(apiUrl: testUrl),
-      verify: (bloc) => bloc.obtainedCharacters.values.toList().length == 1,
+      verify: (bloc) =>
+          bloc.appData.obtainedCharacters.values.toList().length == 1,
       wait: testReview,
     );
     blocTest<HpCardBloc, HpCardState>(

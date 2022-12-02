@@ -46,9 +46,10 @@ class HPCharacter {
     if (nameProp.trim().isEmpty) throw InvalidName();
     if (speciesProp.trim().isEmpty) throw InvalidSpecies();
     if (genderProp.trim().isEmpty) throw InvalidGender();
-    // if (imageUrl != null) {
-    //   if (!Uri.parse(imageUrl).isAbsolute) throw InvalidImageUrl();
-    // }
+    if (imageUrl != null) {
+      Uri direccion = Uri.parse(imageUrl);
+      imageUrl = 'https://hp-api.onrender.com${direccion.path}';
+    }
 
     return HPCharacter._(
       name: nameProp,
