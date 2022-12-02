@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+// import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fpdart/fpdart.dart' show Either, left, right;
 import 'package:hp_cartas/domain/code_input.dart';
 import 'package:hp_cartas/domain/problem.dart';
+
+import 'bad_code_input.dart';
 
 class CharacterObtainerView extends StatelessWidget {
   const CharacterObtainerView({super.key, required this.onSend});
@@ -91,11 +95,26 @@ class _InputCodeFormState extends State<InputCodeForm> {
 
   void submitedCode(String value, BuildContext context) {
     codigo(value).match((l) {
-      // if (l is InvalidCode) {
-      //   emit(BadCodeInput(l));
-      // } else {
-      //   emit(ErrorInesperado(l));
-      // }
+      if (l is InvalidCode) {
+        if (l is EmptyInput) {
+          showToast('ingresa un codigo', context: context);
+        } else if (l is IsNotNumber) {
+          // else {
+          showToast('solo ingresa numeros', context: context);
+        }
+      } else {
+        showToast('si ves esto llama al desarrollador', context: context);
+
+        // FlutterToast(context).showToast(
+        //   child: Center(
+        //     child: Column(
+        //       children: const [
+        //         Text('si ves esto llama al desarrollador'),
+        //       ],
+        //     ),
+        //   ),
+        // );
+      }
     }, (r) {
       widget.onSend(r);
       Navigator.pop(context);
