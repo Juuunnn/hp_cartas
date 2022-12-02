@@ -28,10 +28,16 @@ class StartedLoadingData extends HpCardEvent {
   StartedLoadingData({required this.apiUrl});
 }
 
-class ObtainedNewCharacter extends HpCardEvent {}
+class ObtainedCharacterOfTheDay extends HpCardEvent {}
 
 class InputedCharacterCode extends HpCardEvent {
   final String propCharacter;
 
   InputedCharacterCode(this.propCharacter);
+}
+
+class ObtainedNewCharacter extends HpCardEvent {
+  final HPCharacter character;
+
+  ObtainedNewCharacter(this.character);
 }

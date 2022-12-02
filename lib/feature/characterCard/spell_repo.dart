@@ -3,15 +3,22 @@ import 'dart:convert';
 import 'package:fpdart/fpdart.dart';
 import 'package:hp_cartas/domain/problem.dart';
 import 'package:hp_cartas/domain/spell.dart';
+import 'package:hp_cartas/feature/characterDataProvider/api_data_provider.dart';
 
 abstract class SpellRepo {
-  Either<Problem, List<Spell>> getSpellList({required String elJson});
+  Future<Either<Problem, List<Spell>>> getSpellList(
+      {required ApiDataProvider apiDataProvider});
 }
 
 class SpellRepoTest extends SpellRepo {
   @override
-  Either<Problem, List<Spell>> getSpellList({required String elJson}) {
-    return getListData(elJson);
+  Future<Either<Problem, List<Spell>>> getSpellList(
+      {required ApiDataProvider apiDataProvider}) async {
+    final elJson = await apiDataProvider.getSpellListFromAPI();
+    return elJson.match(
+      (l) => left(l),
+      (r) => getListData(r),
+    );
   }
 }
 
