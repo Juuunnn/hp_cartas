@@ -44,7 +44,6 @@ class _InputCodeFormState extends State<InputCodeForm> {
   void initState() {
     super.initState();
     _controller = TextEditingController();
-    _controller.text = '123';
   }
 
   @override
@@ -73,14 +72,19 @@ class _InputCodeFormState extends State<InputCodeForm> {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextField(
-                maxLength: 9,
-                autofocus: true,
-                keyboardType: TextInputType.number,
-                controller: _controller,
-                onSubmitted: (value) {
-                  submitedCode(value, context);
-                },
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: TextField(
+                  decoration:
+                      const InputDecoration(hintText: 'codigo de numeros'),
+                  maxLength: 9,
+                  autofocus: true,
+                  keyboardType: TextInputType.number,
+                  controller: _controller,
+                  onSubmitted: (value) {
+                    submitedCode(value, context);
+                  },
+                ),
               ),
               TextButton(
                 onPressed: () {
