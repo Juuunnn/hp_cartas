@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:hp_cartas/domain/app_storage.dart';
 import 'package:hp_cartas/domain/character_card.dart';
 import 'package:hp_cartas/feature/characterCard/spell_repo.dart';
 import 'package:meta/meta.dart';
@@ -22,15 +23,14 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
   final CharacterRepo cardRepo;
   final SpellRepo spellRepo;
   final ApiDataProvider dataProvider;
-  Map<String, List<CharacterCard>> obtainedCharacters = {};
-  bool daylyCharacterObtained;
+  AppStorage appData;
 
-  HpCardBloc._({
-    required this.cardRepo,
-    required this.spellRepo,
-    required this.dataProvider,
-    this.daylyCharacterObtained = false,
-  }) : super(HpCardInitial()) {
+  HpCardBloc._(
+      {required this.cardRepo,
+      required this.spellRepo,
+      required this.dataProvider,
+      required this.appData})
+      : super(HpCardInitial()) {
     on<InputedCharacterCode>((event, emit) async {
       emit(LoadingData());
       final characterObtained = await cardRepo.getCharacterWithCode(
@@ -90,7 +90,8 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
       });
     });
     on<SelectedCharacterCard>((event, emit) {
-      List<CharacterCard>? result = obtainedCharacters[event.characterName];
+      List<CharacterCard>? result =
+          appData.obtainedCharacters[event.characterName];
       if (result == null) {
         emit(ErrorInesperado(
             UnknownProblem('error buscando el personaje localmente')));
@@ -110,19 +111,19 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
           emit(ErrorInesperado(l));
         }
       }, ((r) {
-        if (!daylyCharacterObtained) {
-          daylyCharacterObtained = true;
+        if (!appData.daylyCharacterObtained) {
+          appData.daylyCharacterObtained = true;
           add(ObtainedCharacterOfTheDay());
         }
         emit(ShowingCharacterList(
             r,
-            obtainedCharacters
+            appData.obtainedCharacters
                 .map((key, value) => MapEntry(key, value.length))));
       }));
     });
     on<ObtainedNewCharacter>((event, Emitter<HpCardState> emit) async {
-      if (!obtainedCharacters.containsKey(event.character.name)) {
-        obtainedCharacters[event.character.name] = [];
+      if (!appData.obtainedCharacters.containsKey(event.character.name)) {
+        appData.obtainedCharacters[event.character.name] = [];
       }
       final spellSearchResult =
           await spellRepo.getSpellList(apiDataProvider: dataProvider);
@@ -138,8 +139,9 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
           r.removeAt(Random().nextInt(r.length)),
           r.removeAt(Random().nextInt(r.length)),
         ];
-        obtainedCharacters[event.character.name]!.add(CharacterCard.constructor(
-            character: event.character, spells: spellList));
+        appData.obtainedCharacters[event.character.name]!.add(
+            CharacterCard.constructor(
+                character: event.character, spells: spellList));
         emit(ShowingNewCharacterObtained(event.character));
       });
     });
@@ -155,6 +157,7 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
       cardRepo: cardRepo,
       dataProvider: dataProvider,
       spellRepo: spellRepo,
+      appData: AppStorage(),
     );
     bloc.add(StartedLoadingData());
     return bloc;
@@ -168,7 +171,7 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
       cardRepo: CharacterRepoTest(),
       spellRepo: SpellRepoTest(),
       dataProvider: ApiDataProviderTest(apiUrl),
-      daylyCharacterObtained: daylyCharacterObtained,
+      appData: AppStorage(daylyCharacterObtained: daylyCharacterObtained),
     );
     bloc.add(StartedLoadingData());
     return bloc;
