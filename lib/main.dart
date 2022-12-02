@@ -106,7 +106,12 @@ class Pantalla extends StatelessWidget {
           );
         }
         if (state is DataComunicatioError) {
-          return DataProviderErrorView(data: state.parseProblem);
+          return DataProviderErrorView(
+            data: state.parseProblem,
+            onClick: () {
+              context.read<HpCardBloc>().add(StartedLoadingData());
+            },
+          );
         }
         if (state is UserInteraction) {
           return BadCodeInputView(
