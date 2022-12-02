@@ -18,24 +18,22 @@ class ApiDataProviderTest extends ApiDataProvider {
 
   @override
   Future<Either<ProblemDataParse, String>> getCharacterListFromAPI() async {
-    late final String elJson;
     try {
-      elJson = await File('$url/characters.json').readAsString();
+      final String elJson = await File('$url/characters.json').readAsString();
+      return Future.value(validateData(elJson));
     } catch (e) {
       return Future.value(left(BadAPIConection()));
     }
-    return Future.value(validateData(elJson));
   }
 
   @override
   Future<Either<ProblemDataParse, String>> getSpellListFromAPI() async {
-    late final String elJson;
     try {
-      elJson = await File('$url/spells.json').readAsString();
+      final String elJson = await File('$url/spells.json').readAsString();
+      return Future.value(validateData(elJson));
     } catch (e) {
       return Future.value(left(BadAPIConection()));
     }
-    return Future.value(validateData(elJson));
   }
 
   // @override
@@ -48,8 +46,8 @@ class ApiDataProviderTest extends ApiDataProvider {
 Either<ProblemDataParse, String> validateData(String data) {
   try {
     List<dynamic> listaCharacters = jsonDecode(data);
+    return right(data);
   } catch (e) {
     return left(InvalidDataRecived());
   }
-  return right(data);
 }
