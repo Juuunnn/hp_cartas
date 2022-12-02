@@ -9,14 +9,14 @@ class CharacterListView extends StatelessWidget {
       required this.onClick,
       required this.obtainedCharacters});
   final List<String> characterList;
-  final List<String> obtainedCharacters;
+  final Map<String, num> obtainedCharacters;
   final Function(String characterName) onClick;
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
       CharacterCounter(
           totalCharacters: characterList.toSet().length,
-          currentCharacters: obtainedCharacters.toSet().length),
+          currentCharacters: obtainedCharacters.entries.toSet().length),
       SingleChildScrollView(
         child: CharacterList(
           fullCharacterList: characterList,
@@ -54,7 +54,7 @@ class CharacterList extends StatelessWidget {
   }) : super(key: key);
 
   final List<String> fullCharacterList;
-  final List<String> obtainedCharacters;
+  final Map<String, num> obtainedCharacters;
   final Function(String characterName) onClick;
 
   @override
@@ -93,12 +93,12 @@ class CharacterEntry extends StatelessWidget {
     required this.obtainedCharacters,
   }) : super(key: key);
   final String characterName;
-  final List<String> obtainedCharacters;
+  final Map<String, num> obtainedCharacters;
   final Function(String characterName) onClick;
 
   @override
   Widget build(BuildContext context) {
-    bool obtained = obtainedCharacters.contains(characterName);
+    bool obtained = obtainedCharacters.keys.contains(characterName);
     return TextButton(
       style: TextButton.styleFrom(
           backgroundColor: obtained ? Colors.brown[300] : null,
@@ -107,9 +107,18 @@ class CharacterEntry extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Center(
-          child: Text(
-            characterName,
-            style: GoogleFonts.aladin(fontSize: 30),
+          child: Row(
+            children: [
+              Text(
+                characterName,
+                style: GoogleFonts.aladin(fontSize: 30),
+              ),
+              Spacer(),
+              Text(
+                obtained ? obtainedCharacters[characterName].toString() : '',
+                style: GoogleFonts.aladin(fontSize: 30, color: Colors.white70),
+              ),
+            ],
           ),
         ),
       ),

@@ -22,16 +22,18 @@ class SelectedCharacterCard extends HpCardEvent {
 
 class NavegatedToCharacterList extends HpCardEvent {}
 
-class StartedLoadingData extends HpCardEvent {
-  final String apiUrl;
+class StartedLoadingData extends HpCardEvent {}
 
-  StartedLoadingData({required this.apiUrl});
-}
-
-class ObtainedNewCharacter extends HpCardEvent {}
+class ObtainedCharacterOfTheDay extends HpCardEvent {}
 
 class InputedCharacterCode extends HpCardEvent {
-  final String propCharacter;
+  final CodeInput codeInput;
 
-  InputedCharacterCode(this.propCharacter);
+  InputedCharacterCode(this.codeInput);
+}
+
+class ObtainedNewCharacter extends HpCardEvent {
+  final HPCharacter character;
+
+  ObtainedNewCharacter(this.character);
 }

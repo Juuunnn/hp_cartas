@@ -1,141 +1,193 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:math';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:hp_cartas/feature/characterCard/spell_repo.dart';
+import 'package:meta/meta.dart';
+
 import 'package:hp_cartas/domain/character.dart';
 import 'package:hp_cartas/domain/code_input.dart';
 import 'package:hp_cartas/domain/problem.dart';
-import 'package:hp_cartas/feature/characterCard/character_card_repo.dart';
-import 'package:hp_cartas/feature/characterDataProvider/character_data_provider.dart';
-import 'package:meta/meta.dart';
+import 'package:hp_cartas/domain/spell.dart';
+import 'package:hp_cartas/feature/characterCard/character_repo.dart';
+import 'package:hp_cartas/feature/characterDataProvider/api_data_provider.dart';
 
 part 'hp_card_event.dart';
 part 'hp_card_state.dart';
 
 class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
-  final CharacterCardRepo cardRepo;
-  final CharacterDataProvider dataProvider;
-  late final String rawData;
-  List<HPCharacter> obtainedCharacters = [];
+  final CharacterRepo cardRepo;
+  final SpellRepo spellRepo;
+  final ApiDataProvider dataProvider;
+  Map<String, List<CharacterCard>> obtainedCharacters = {};
   bool daylyCharacterObtained;
 
   HpCardBloc._({
     required this.cardRepo,
+    required this.spellRepo,
     required this.dataProvider,
     this.daylyCharacterObtained = false,
   }) : super(HpCardInitial()) {
-    on<InputedCharacterCode>((event, emit) {
+    on<InputedCharacterCode>((event, emit) async {
       emit(LoadingData());
-      Either<Problem, CodeInput> codigo() {
-        try {
-          return right(CodeInput.constructor(event.propCharacter));
-        } on InvalidCode catch (e) {
-          return left(e);
-        } catch (e) {
-          return left(UnknownProblem(e.toString()));
-        }
-      }
-
-      codigo().match(
+      final characterObtained = await cardRepo.getCharacterWithCode(
+          characterCode: event.codeInput, apiDataProvider: dataProvider);
+      characterObtained.match(
         (l) {
-          if (l is InvalidCode) {
-            emit(BadCodeInput(l));
+          if (l is BadAPIConection) {
+            emit(DataComunicatioError(l));
           } else {
             emit(ErrorInesperado(l));
           }
         },
         (r) {
-          final characterObtained =
-              cardRepo.getCharacterWithCode(characterCode: r, elJson: rawData);
-          characterObtained.match(
-            (l) {
-              emit(ErrorInesperado(l));
-            },
-            (r) {
-              if (r == null) {
-                emit(NoMatchForCharacterCode());
-              } else {
-                obtainedCharacters.add(r);
-                emit(ShowingNewCharacterObtained(r));
-              }
-            },
-          );
+          if (r == null) {
+            emit(NoMatchForCharacterCode());
+          } else {
+            add(ObtainedNewCharacter(r));
+          }
         },
       );
     });
-    on<ObtainedNewCharacter>((event, emit) {
-      final fullCharacterList = cardRepo.getCharacterNameList(elJson: rawData);
-      fullCharacterList.match((l) {
-        emit(ErrorInesperado(l));
-      }, (r) {
-        final characterName = r.elementAt(randomInt(0, r.length).run());
-        final newCharacter = cardRepo.getCharacterData(
-            characterName: characterName, elJson: rawData);
-        newCharacter.match((l) {
+    on<ObtainedCharacterOfTheDay>((event, emit) async {
+      final fullCharacterList =
+          await cardRepo.getCharacterNameList(apiDataProvider: dataProvider);
+      await fullCharacterList.match((l) {
+        if (l is BadAPIConection) {
+          emit(DataComunicatioError(l));
+        } else {
           emit(ErrorInesperado(l));
-        }, (r) {
-          obtainedCharacters.add(r);
-          emit(ShowingNewCharacterObtained(r));
-        });
+        }
+      }, (r) async {
+        final characterName = r.elementAt(randomInt(0, r.length).run());
+        final newCharacter = await cardRepo.getCharacterWithName(
+            characterName: characterName, apiDataProvider: dataProvider);
+        await newCharacter.match(
+          (l) {
+            if (l is BadAPIConection) {
+              emit(DataComunicatioError(l));
+            } else {
+              emit(ErrorInesperado(l));
+            }
+          },
+          (r) async {
+            add(ObtainedNewCharacter(r));
+          },
+        );
       });
     });
     on<StartedLoadingData>((event, emit) async {
-      final dataRecived = await dataProvider.getFromAPI(event.apiUrl);
-      dataRecived.match((l) {
+      emit(LoadingData());
+      //comprueba que haiga coneccion con el servidor
+      final characterDataRecived = await dataProvider.getCharacterListFromAPI();
+      characterDataRecived.match((l) {
         emit(DataComunicatioError(l));
-      }, (r) {
-        rawData = r;
+      }, (r1) {
         add(NavegatedToCharacterList());
       });
     });
     on<SelectedCharacterCard>((event, emit) {
-      try {
-        HPCharacter result = obtainedCharacters
-            .firstWhere((element) => element.name == event.characterName);
+      List<CharacterCard>? result = obtainedCharacters[event.characterName];
+      if (result == null) {
+        emit(ErrorInesperado(
+            UnknownProblem('error buscando el personaje localmente')));
+      } else {
         emit(ShowingCharacterCard(result));
-      } catch (e) {
-        emit(ErrorInesperado(UnknownProblem(e.toString())));
       }
       // final result = cardRepo.getCharacterData(
       //     characterName: event.characterName, elJson: rawData);
     });
-    on<NavegatedToCharacterList>((event, emit) {
-      final result = cardRepo.getCharacterNameList(elJson: rawData);
+    on<NavegatedToCharacterList>((event, emit) async {
+      final result =
+          await cardRepo.getCharacterNameList(apiDataProvider: dataProvider);
       result.match((l) {
-        emit(ErrorInesperado(l));
+        if (l is BadAPIConection) {
+          emit(DataComunicatioError(l));
+        } else {
+          emit(ErrorInesperado(l));
+        }
       }, ((r) {
         if (!daylyCharacterObtained) {
           daylyCharacterObtained = true;
-          add(ObtainedNewCharacter());
+          add(ObtainedCharacterOfTheDay());
         }
         emit(ShowingCharacterList(
-            r, obtainedCharacters.map((e) => e.name).toList()));
+            r,
+            obtainedCharacters
+                .map((key, value) => MapEntry(key, value.length))));
       }));
+    });
+    on<ObtainedNewCharacter>((event, Emitter<HpCardState> emit) async {
+      if (!obtainedCharacters.containsKey(event.character.name)) {
+        obtainedCharacters[event.character.name] = [];
+      }
+      final spellSearchResult =
+          await spellRepo.getSpellList(apiDataProvider: dataProvider);
+      spellSearchResult.match((l) {
+        if (l is BadAPIConection) {
+          emit(DataComunicatioError(l));
+        } else {
+          emit(ErrorInesperado(l));
+        }
+      }, (r) {
+        final spellList = [
+          r.removeAt(Random().nextInt(r.length)),
+          r.removeAt(Random().nextInt(r.length)),
+          r.removeAt(Random().nextInt(r.length)),
+        ];
+        obtainedCharacters[event.character.name]!.add(CharacterCard.constructor(
+            character: event.character, spells: spellList));
+        emit(ShowingNewCharacterObtained(event.character));
+      });
     });
   }
 
   factory HpCardBloc.constructor({
     required String apiUrl,
-    required CharacterCardRepo cardRepo,
-    required CharacterDataProvider dataProvider,
+    required CharacterRepo cardRepo,
+    required SpellRepo spellRepo,
+    required ApiDataProvider dataProvider,
   }) {
-    HpCardBloc bloc =
-        HpCardBloc._(cardRepo: cardRepo, dataProvider: dataProvider);
-    bloc.add(StartedLoadingData(apiUrl: apiUrl));
+    HpCardBloc bloc = HpCardBloc._(
+      cardRepo: cardRepo,
+      dataProvider: dataProvider,
+      spellRepo: spellRepo,
+    );
+    bloc.add(StartedLoadingData());
     return bloc;
   }
 
-  factory HpCardBloc.tester(
-      {required String apiUrl, bool daylyCharacterObtained = false}) {
+  factory HpCardBloc.tester({
+    required String apiUrl,
+    bool daylyCharacterObtained = false,
+  }) {
     HpCardBloc bloc = HpCardBloc._(
-        cardRepo: CharacterCardRepoTest(),
-        dataProvider: CharacterDataObtainerTest(),
-        daylyCharacterObtained: daylyCharacterObtained);
-    bloc.add(StartedLoadingData(apiUrl: apiUrl));
+      cardRepo: CharacterRepoTest(),
+      spellRepo: SpellRepoTest(),
+      dataProvider: ApiDataProviderTest(apiUrl),
+      daylyCharacterObtained: daylyCharacterObtained,
+    );
+    bloc.add(StartedLoadingData());
     return bloc;
   }
 }
 
+class CharacterCard {
+  final HPCharacter character;
+  final List<Spell> spells;
+  CharacterCard._({
+    required this.character,
+    required this.spells,
+  });
 
-	// TODO: 5. poder obtener personajes obtenidos por conocidos
-	// 	mostrar una entrada para obtener personajes a proposito
-	// >		cada personaje tendra un codigo que permitira compartir una copia con otra persona
+  /// el largo de la lista de hechizos debe ser 3 exactamente
+  factory CharacterCard.constructor(
+      {required HPCharacter character, required List<Spell> spells}) {
+    if (spells.length != 3) {
+      throw IncorrectSpellLength();
+    }
+    return CharacterCard._(character: character, spells: spells);
+  }
+}

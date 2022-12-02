@@ -2,12 +2,17 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hp_cartas/bloc/hp_card_bloc.dart';
 import 'package:hp_cartas/domain/character.dart';
-import 'package:hp_cartas/feature/characterCard/character_card_repo.dart';
+import 'package:hp_cartas/domain/code_input.dart';
+import 'package:hp_cartas/feature/characterCard/character_repo.dart';
 
-const String testUrl = 'test/characters.json';
+const String testUrl = 'test';
 
-const duration = Duration(milliseconds: 100);
+const duration = Duration(milliseconds: 300);
+const testReview = Duration(milliseconds: 2000);
+// si estos test fallan lo mas probable es que este relacionado con el tiempo
+// que se tarden en ejecutar y el tiempo entre llamadas al bloc
 
+//mejor ejemplo de test de multiples acciones es el que tiene async await.
 void main() {
   group('hp card bloc debe', () {
     blocTest<HpCardBloc, HpCardState>(
@@ -16,11 +21,12 @@ void main() {
       act: (bloc) {
         Future.delayed(duration, () {
           bloc.add(SelectedCharacterCard(
-              characterName: bloc.obtainedCharacters.first.name));
+              characterName: bloc.obtainedCharacters.entries.first.value.first
+                  .character.name));
         });
       },
-      wait: duration,
-      skip: 2,
+      wait: testReview,
+      skip: 3,
       expect: () => [isA<ShowingCharacterCard>()],
     );
     blocTest<HpCardBloc, HpCardState>(
@@ -29,52 +35,80 @@ void main() {
           HpCardBloc.tester(apiUrl: testUrl, daylyCharacterObtained: true),
       act: (bloc) {
         Future.delayed(duration, () {
-          bloc.add(InputedCharacterCode('289311629'));
+          bloc.add(InputedCharacterCode(CodeInput.constructor('289311629')));
         });
       },
-      wait: duration,
-      skip: 1,
-      expect: () => [isA<LoadingData>(), isA<ShowingNewCharacterObtained>()],
-    );
-    blocTest<HpCardBloc, HpCardState>(
-      'deve poder obtener guardar un nuevo personaje',
-      build: () => HpCardBloc.tester(apiUrl: testUrl),
-      act: (bloc) {
-        Future.delayed(duration, () {
-          bloc.add(InputedCharacterCode('289311629'));
-        });
-      },
-      wait: duration,
-      verify: (bloc) => bloc.obtainedCharacters.length = 2,
+      wait: testReview,
       skip: 2,
       expect: () => [isA<LoadingData>(), isA<ShowingNewCharacterObtained>()],
     );
     blocTest<HpCardBloc, HpCardState>(
-      'deve tirar error cuando el codigo es malo',
-      build: () =>
-          HpCardBloc.tester(apiUrl: testUrl, daylyCharacterObtained: true),
+      'deve poder obtener y guardar un nuevo personaje',
+      build: () => HpCardBloc.tester(apiUrl: testUrl),
       act: (bloc) {
         Future.delayed(duration, () {
-          bloc.add(InputedCharacterCode('28j3t129'));
+          bloc.add(InputedCharacterCode(CodeInput.constructor('289311629')));
         });
       },
-      wait: duration,
-      skip: 1,
-      expect: () => [isA<LoadingData>(), isA<BadCodeInput>()],
+      wait: testReview,
+      verify: (bloc) => bloc.obtainedCharacters.values.toList().length == 2,
+      skip: 3,
+      expect: () => [isA<LoadingData>(), isA<ShowingNewCharacterObtained>()],
     );
     blocTest<HpCardBloc, HpCardState>(
-      'deve tirar error cuando el codigo no corresponde a un personaje',
+      'deve poder guardar varias copias de un personaje',
       build: () =>
           HpCardBloc.tester(apiUrl: testUrl, daylyCharacterObtained: true),
-      act: (bloc) {
-        Future.delayed(duration, () {
-          bloc.add(InputedCharacterCode('289311628'));
+      act: (bloc) async {
+        const time = 300;
+
+        await Future.delayed(const Duration(milliseconds: time), () {
+          bloc.add(InputedCharacterCode(CodeInput.constructor('289311629')));
+        });
+        await Future.delayed(const Duration(milliseconds: time * 3), () {
+          bloc.add(NavegatedToCharacterList());
+        });
+        await Future.delayed(const Duration(milliseconds: time * 3), () {
+          bloc.add(InputedCharacterCode(CodeInput.constructor('289311629')));
         });
       },
-      wait: duration,
-      skip: 1,
-      expect: () => [isA<LoadingData>(), isA<NoMatchForCharacterCode>()],
+      wait: const Duration(milliseconds: 4000),
+      verify: (bloc) => bloc.obtainedCharacters['Albert Runcorn']!.length == 4,
+      skip: 2,
+      expect: () => [
+        isA<LoadingData>(),
+        isA<ShowingNewCharacterObtained>(),
+        isA<ShowingCharacterList>(),
+        isA<LoadingData>(),
+        isA<ShowingNewCharacterObtained>(),
+      ],
     );
+    // blocTest<HpCardBloc, HpCardState>(
+    //   'deve tirar error cuando el codigo es malo',
+    //   build: () =>
+    //       HpCardBloc.tester(apiUrl: testUrl, daylyCharacterObtained: true),
+    //   act: (bloc) {
+    //     Future.delayed(duration, () {
+    //       bloc.add(InputedCharacterCode('28j3t129'));
+    //     });
+    //   },
+    //   wait: testReview,
+    //   skip: 1,
+    //   expect: () => [isA<LoadingData>(), isA<BadCodeInput>()],
+    // );
+    // blocTest<HpCardBloc, HpCardState>(
+    //   'deve no encontrar a un personaje con 289311628',
+    //   build: () =>
+    //       HpCardBloc.tester(apiUrl: testUrl, daylyCharacterObtained: true),
+    //   act: (bloc) {
+    //     Future.delayed(duration, () {
+    //       bloc.add(InputedCharacterCode('289311628'));
+    //     });
+    //   },
+    //   wait: testReview,
+    //   skip: 1,
+    //   expect: () => [isA<LoadingData>(), isA<NoMatchForCharacterCode>()],
+    // );
     // blocTest<HpCardBloc, HpCardState>(
     //   'deve poder mostrar la tarjeta de un personaje que contiene',
     //   build: () =>
@@ -108,25 +142,26 @@ void main() {
       act: (bloc) {
         Future.delayed(duration, () {
           bloc.add(SelectedCharacterCard(
-              characterName: bloc.obtainedCharacters.first.name));
+              characterName: bloc.obtainedCharacters.entries.first.key));
           bloc.add(NavegatedToCharacterList());
         });
       },
-      wait: duration,
-      skip: 2,
+      wait: testReview,
+      skip: 3,
       expect: () => [isA<ShowingCharacterCard>(), isA<ShowingCharacterList>()],
     );
     blocTest<HpCardBloc, HpCardState>(
       'deve desbloquear un nuevo personaje al iniciar',
       build: () => HpCardBloc.tester(apiUrl: testUrl),
-      verify: (bloc) => bloc.obtainedCharacters.length = 1,
-      wait: duration,
+      verify: (bloc) => bloc.obtainedCharacters.values.toList().length == 1,
+      wait: testReview,
     );
     blocTest<HpCardBloc, HpCardState>(
       'deve poder tirar mala comunicacion',
       build: () =>
           HpCardBloc.tester(apiUrl: 'adsfa', daylyCharacterObtained: true),
-      wait: duration,
+      wait: testReview,
+      skip: 1,
       expect: () => [isA<DataComunicatioError>()],
     );
   });

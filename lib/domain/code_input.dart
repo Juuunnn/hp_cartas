@@ -5,8 +5,8 @@ class CodeInput {
 
   CodeInput._(this.searchCode);
   factory CodeInput.constructor(String prop) {
-    if (int.tryParse(prop) == null) throw IsNotNumber();
     if (prop.isEmpty) throw EmptyInput();
+    if (int.tryParse(prop) == null) throw IsNotNumber();
     return CodeInput._(prop);
   }
 }
