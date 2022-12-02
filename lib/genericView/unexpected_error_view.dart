@@ -1,9 +1,12 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hp_cartas/domain/problem.dart';
 
 class UnexpectedErrorView extends StatelessWidget {
-  const UnexpectedErrorView({super.key, required this.problem});
+  const UnexpectedErrorView(
+      {super.key, required this.problem, required this.onClick});
   final Problem problem;
+  final Function() onClick;
   @override
   Widget build(BuildContext context) {
     // print(object)
@@ -14,7 +17,10 @@ class UnexpectedErrorView extends StatelessWidget {
             const Text('se genero un error inesperado en la aplicacion:'),
             Text(
                 'Estado actual ${problem.toString()} ${(problem as UnknownProblem).problema}'),
-            // TODO: aqui deve haber alguna manera para reiniciar la aplicacion
+            TextButton(
+              onPressed: onClick,
+              child: const Text('volver a iniciar la aplicacion'),
+            )
           ],
         ),
       );
@@ -24,7 +30,10 @@ class UnexpectedErrorView extends StatelessWidget {
         children: [
           const Text('se genero un error inesperado en la aplicacion:'),
           Text('Estado actual ${problem.toString()}'),
-          // TODO: aqui deve haber alguna manera para reiniciar la aplicacion
+          TextButton(
+            onPressed: onClick,
+            child: const Text('volver a iniciar la aplicacion'),
+          )
         ],
       ),
     );

@@ -5,17 +5,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hp_cartas/bloc/hp_card_bloc.dart';
 import 'package:hp_cartas/domain/code_input.dart';
 import 'package:hp_cartas/feature/characterCard/character_repo.dart';
+import 'package:hp_cartas/feature/characterCard/spell_repo.dart';
 import 'package:hp_cartas/feature/characterCard/view/bad_code_input.dart';
 import 'package:hp_cartas/feature/characterCard/view/character_card_view.dart';
 import 'package:hp_cartas/feature/characterCard/view/character_list_view.dart';
 import 'package:hp_cartas/feature/characterCard/view/character_obtainer_view.dart';
+import 'package:hp_cartas/feature/characterDataProvider/api_data_provider.dart';
 import 'package:hp_cartas/feature/characterDataProvider/view/data_provider_error_view.dart';
 import 'package:hp_cartas/feature/characterDataProvider/view/new_character_obtained_view.dart';
 import 'package:hp_cartas/genericView/bad_state_view.dart';
 import 'package:hp_cartas/genericView/loading.dart';
 import 'package:hp_cartas/genericView/unexpected_error_view.dart';
 
-const String apiUrl = 'test';
+const String apiUrl = 'hp-api.onrender.com';
 
 void main() {
   runApp(const MyApp());
@@ -26,7 +28,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => HpCardBloc.tester(apiUrl: apiUrl),
+      create: (context) => HpCardBloc.constructor(
+          apiUrl: apiUrl,
+          cardRepo: CharacterRepoTest(),
+          spellRepo: SpellRepoTest(),
+          dataProvider: ApiDataProviderReal(apiUrl)),
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
@@ -87,12 +93,17 @@ class Pantalla extends StatelessWidget {
           return NewCharacterObtainedView(
             character: state.character,
             onTap: () {
-              context.read<HpCardBloc>().add(NavegatedToCharacterList());
+              context.read<HpCardBloc>().add(StartedLoadingData());
             },
           );
         }
         if (state is ErrorInesperado) {
-          return UnexpectedErrorView(problem: state.problem);
+          return UnexpectedErrorView(
+            problem: state.problem,
+            onClick: (() {
+              context.read<HpCardBloc>().add(NavegatedToCharacterList());
+            }),
+          );
         }
         if (state is DataComunicatioError) {
           return DataProviderErrorView(data: state.parseProblem);

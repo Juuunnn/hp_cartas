@@ -67,6 +67,7 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
       });
     });
     on<StartedLoadingData>((event, emit) async {
+      emit(LoadingData());
       //comprueba que haiga coneccion con el servidor
       final characterDataRecived = await dataProvider.getCharacterListFromAPI();
       characterDataRecived.match((l) {
@@ -134,7 +135,7 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
       dataProvider: dataProvider,
       spellRepo: spellRepo,
     );
-    bloc.add(StartedLoadingData(apiUrl: apiUrl));
+    bloc.add(StartedLoadingData());
     return bloc;
   }
 
@@ -148,7 +149,7 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
       dataProvider: ApiDataProviderTest(apiUrl),
       daylyCharacterObtained: daylyCharacterObtained,
     );
-    bloc.add(StartedLoadingData(apiUrl: apiUrl));
+    bloc.add(StartedLoadingData());
     return bloc;
   }
 }
