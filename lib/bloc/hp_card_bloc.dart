@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:hp_cartas/domain/character_card.dart';
 import 'package:hp_cartas/feature/characterCard/spell_repo.dart';
 import 'package:meta/meta.dart';
 
@@ -174,23 +175,7 @@ class HpCardBloc extends Bloc<HpCardEvent, HpCardState> {
   }
 }
 
-class CharacterCard {
-  final HPCharacter character;
-  final List<Spell> spells;
-  CharacterCard._({
-    required this.character,
-    required this.spells,
-  });
 
-  /// el largo de la lista de hechizos debe ser 3 exactamente
-  factory CharacterCard.constructor(
-      {required HPCharacter character, required List<Spell> spells}) {
-    if (spells.length != 3) {
-      throw IncorrectSpellLength();
-    }
-    return CharacterCard._(character: character, spells: spells);
-  }
-}
 
 	// TODO: 8. almacenar y recuperar personajes guardados desde la memoria local
 	// >		cada vez que se inicie la aplicacion debe cargar la informacion desde almacenamiento local
